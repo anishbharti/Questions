@@ -64,3 +64,38 @@ retrieval, and can be simple (single column) or composite (multiple columns).
 13. Undo Commit in Git
 Use git reset (--soft, --mixed, --hard) to undo commits locally, or git revert to create a new commit
 reversing changes, preserving history in shared repos
+
+-------------------------------------------------
+1. What is the difference between ExecutorService and ForkJoinPool?
+Answer: ExecutorService is used for managing and controlling thread pools, while ForkJoinPool is
+specialized for divide-and-conquer tasks, leveraging work-stealing for efficiency.
+
+----------------------------------------------------
+2. What are the key features of Java?
+Answer: Key features include platform independence, object-oriented programming, automatic
+memory management (Garbage Collection), robust security, and multithreading support.
+
+------------------------------------------------------
+3. Explain memory management in Java.
+Answer: Java uses automatic memory management via Garbage Collection, which reclaims memory
+by removing unused objects, reducing the risk of memory leaks.
+
+------------------------------------------------------
+4. What is thread safety, and how can it be achieved in Java?
+Answer: Thread safety ensures shared data consistency in multithreaded environments. Achieved
+via synchronization, locks, and concurrent utilities like ConcurrentHashMap.
+
+------------------------------------------------------
+5. Find the first non-repeated character in a string using Java 8.
+Answer: Using Java 8 Streams: 'str.chars().mapToObj(c -> (char) c).filter(ch -> str.indexOf(ch) ==
+str.lastIndexOf(ch)).findFirst().orElse(null);'.
+
+------------------------------------------------------
+6. What is the difference between wait() and sleep() in Java?
+Answer: wait() releases the monitor lock, pausing the thread until notified, while sleep() pauses a
+thread for a fixed duration without releasing locks.
+
+-----------------------------------------------------
+7. Features of Java 8.
+Answer: Java 8 introduced Lambda Expressions, Stream API, Default Methods in Interfaces,
+Optional class, and new Date-Time API for enhanced functionality
