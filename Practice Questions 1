@@ -99,3 +99,63 @@ thread for a fixed duration without releasing locks.
 7. Features of Java 8.
 Answer: Java 8 introduced Lambda Expressions, Stream API, Default Methods in Interfaces,
 Optional class, and new Date-Time API for enhanced functionality
+
+------------------------------------------------------
+
+1. Write a Java program to find the second highest element in an array using Java 8 Streams.
+Answer:
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+public class SecondHighest {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(4, 1, 2, 5, 3, 5, 7, 7, 6);
+        Optional<Integer> secondHighest = numbers.stream()
+            .distinct()
+            .sorted(Comparator.reverseOrder())
+            .skip(1)
+            .findFirst();
+        secondHighest.ifPresent(System.out::println);
+    }
+}
+
+-------------------------------------------------------------------
+2. How do you ensure a piece of code is executed by only one thread at a time?
+Answer:
+You can use `synchronized` blocks, `ReentrantLock`, or `Atomic` variables.
+Example using synchronized:
+synchronized (this) {
+    // Critical section
+}
+
+-------------------------------------------------------------------
+3. How would you refactor a piece of code to use Lambda expressions?
+Answer:
+If you have an anonymous class like:
+Runnable r = new Runnable() {
+    public void run() {
+        System.out.println("Running...");
+    }
+};
+It can be refactored using a lambda expression:
+Runnable r = () -> System.out.println("Running...");
+
+------------------------------------------------------------------
+4. Write an SQL query to find the average salary for each department, excluding salaries
+above a certain threshold.
+Answer:
+SELECT department_id, AVG(salary) AS average_salary
+FROM employees
+WHERE salary <= 50000
+GROUP BY department_id;
+
+-------------------------------------------------------------------
+5. How to connect a Spring Boot application to a database using JDBC?
+Answer:
+1. Add `spring-boot-starter-jdbc` dependency in `pom.xml`.
+2. Configure `application.properties`:
+spring.datasource.url=jdbc:mysql://localhost:3306/mydb
+spring.datasource.username=root
+spring.datasource.password=root_password
+3. Use `JdbcTemplate` for database operations
