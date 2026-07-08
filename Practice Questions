@@ -305,4 +305,30 @@ Shrunga S
 12 Difference between spring and spring boot  
 13 What is the start point and end point of spring boot application 
 14 Explain the internal working of hash map 
+
+=======================================================================================================
+
+1. What is the difference between `ArrayList` and `Set`?
+2. Is there any implementation of `Set` where we can maintain the order?
+3. Can you explain what is `TreeSet` and its use case?
+4. Can we have duplicate keys in a `HashMap`?
+5. Can we have duplicate values in a `HashMap`?
+6. What is the difference between `HashMap` and `Multimap`?
+7. How is `HashMap` internally implemented in Java?
+8. How does `HashMap` handle hash collisions?
+9. What is the difference between `@InjectMocks` and `@Mock` in Mockito?
+10. When writing JUnit tests, how can we avoid writing the same setup code repeatedly for multiple
+tests?
+11. What is the execution order when debugging a test with `@BeforeEach` and specific test
+methods?
+12. What are marker interfaces in Java?
+13. Explain any two or three predefined marker interfaces in Java.
+14. Write a Java program to find numbers divisible by 3, divide them by 3, and find the greatest
+quotient using Java Streams.
+15. How can the previous program be modified to avoid passing a comparator argument to the
+`max` method?
+16. What are the different map functions in Java Streams, such as `mapToInt` and `mapToLong`?
+17. Write a program using Java Streams to filter students with attendance greater than 80 from a
+`Map<Integer, Student>` where the key is a roll number, and the value is a `Student` object.
+18. Modify the program to sort the students by marks in descending order
  
