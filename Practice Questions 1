@@ -1,0 +1,66 @@
+1. Serialization
+Converts objects into byte streams for storage or transfer, making them platform-independent.
+Serializable interface ensures object state is preserved, enabling later deserialization for reuse.
+
+
+------------------------------------------------
+2. Runnable vs Callable
+Runnable runs tasks without returning results or throwing checked exceptions. Callable supports
+task execution with a return value and can throw checked exceptions, suitable for multithreaded
+environments.
+
+------------------------------------------------
+3. UNION vs UNION ALL
+UNION merges results from queries, removing duplicates. UNION ALL also merges but keeps
+duplicates, making it faster. Both must have the same number of columns.
+
+------------------------------------------------
+4. CASE in SQL
+Conditional statement returning different results based on conditions. Useful for dynamic queries,
+categorizing data, or applying conditions in SELECT, WHERE, and ORDER BY.
+
+----------------------------------------------------
+5. Dependency Injection
+Design pattern where objects receive dependencies externally, improving modularity and testability.
+In Spring, DI is achieved using annotations like @Autowired or XML configuration.
+
+----------------------------------------------------
+6. Send from Controller to JUnit
+Use MockMvc in tests to simulate HTTP requests, interact with controllers, and validate responses,
+enabling seamless testing of Spring controllers' behavior and logic.
+
+--------------------------------------------------
+7. @Primary in Spring
+Marks a bean as the default when multiple beans of the same type exist, resolving ambiguity during
+autowiring unless overridden with @Qualifier. Ensures a default choice for DI.
+
+----------------------------------------------------
+8. Bean Scope Definition
+Define bean scopes (singleton, prototype, etc.) using @Scope in annotations or scope attribute in
+XML. It controls bean lifecycle and usage in Spring.
+
+------------------------------------------------
+9. @DispatcherServlet
+Core Spring MVC component, a front controller handling all HTTP requests. Maps URLs to
+controllers, resolves views, and integrates with Spring's web components.
+
+=--------------------------------------------
+10. PathVariable vs RequestParam
+PathVariable extracts values from URL paths; RequestParam extracts query string parameters. Use
+PathVariable for resource identification and RequestParam for filtering or optional inputs.
+
+--------------------------------------------
+11. Cascading
+Automatically propagates operations (e.g., persist, delete) from parent entities to related entities in
+JPA relationships. Simplifies operations by reducing manual management of dependent entities.
+
+-----------------------------------------------
+12. Primary Keys
+Unique, non-null identifiers for database table records. They enforce uniqueness, ensure record
+retrieval, and can be simple (single column) or composite (multiple columns).
+
+
+--------------------------------------------------
+13. Undo Commit in Git
+Use git reset (--soft, --mixed, --hard) to undo commits locally, or git revert to create a new commit
+reversing changes, preserving history in shared repos
