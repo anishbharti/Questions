@@ -1,0 +1,308 @@
+======================================================================================
+Vishal Kumar Das  
+1. Remove the duplicate number with stream Api 
+2. Reverse your name in Java 8 
+3. Oops Concept 
+4. Difference between Linked list and Array list 
+5.  Difference between JRE & JDK , JVM 
+6. Spring boot Annotation 
+7.  Difference between Micro service and  Monolithic 
+8. Design Pattern Explanation 
+9.What is Singleton Class 
+10.Write SQL Query to find out Third Highest Salary 
+11.Explain MVC Architecture 
+12.Explain java 8 features 
+13.Different between Hash Map and Hash code. 
+14.what is Failsafe and fail fast. 
+15. Difference between Collection & Collections. 
+16. How does Hash Map work internally 
+17. Explain the comparable and comparator  
+18. Difference  between String Buffer & String Builder 
+19. Explain CI/CD 
+20. Multi thread Life Cycle  
+21 How to create exception in Java 
+22 What is @ Autowierd Annotation 
+23 Difference between @Autowierd & @Beans 
+24 Difference between GET & Load 
+25 Explain Kafka 
+26 Difference between @Path Variable & @Request Param 
+27 Difference between Field Injection , Setter Injection and Constructor Injection 
+28 What is @Qualifier 
+29 Contract between Has code & Equals 
+30 How will you handle multiple threads on the same table at the same time in hibernate 
+31 Difference between Delete and Truncate 
+32 We have two micro services so , how do two micro services communicate with each other 
+
+=======================================================================================================
+Krishna Mehta  
+Java 8 features 
+*Difference* 
+Comparable and comparator 
+Hash map vs hash table 
+Volatile keyword in java 
+Construct injection and setter injection difference 
+Memory leakage and how u handle 
+@auto wired boots in spring boot 
+Terminal operation and intermediate operation 
+Throw and throws keyword 
+ARRAYLIST AND LINKED LIST 
+HOW WE HANDLE EXCEPTION IN SPRING BOOT 
+Spring boot actuator 
+String equals method and double equals method 
+Get and load method in Hibernate 
+First level caching and second level caching 
+Write a program to find duplicates 1,2,3,4,1 using integer list using stream 
+Output is 1 
+Memory leakage how u handle 
+Rest controller and controller difference 
+Spring initializer 
+How memory management work 
+How string is immutable 
+Difference between array list and linked list 
+Is hash map is thread safe 
+How does circuit breaker work? 
+Which design pattern work in micro service 
+What type of communication is used in finclinet? 
+Is there any other way to resolve bean confliction apart from using @configuration, qualifier 
+
+
+=============================================================================================================
+Suryadeep 
+we have 5 elements in array, 2, 4. Please open your notebook and something text editor. I will 
+use notepad only. Yeah. Yeah. Yeah. So, in array, there is 5 elements, like 2, 4, 6, 8, 10. 4, 6, 8, 
+10. Yeah. And we have to type a function, like who rotates the array. Like, once the function 
+call, the output will be 4, 6, 8, 10, 2. Yeah. Yeah. And again, the function will be called, then the 
+output will be 6, 8, 10, 2, 4. 
+how you decide that you have to use abstract class or interface? 
+How do we achieve abstraction? 
+What will be the benefit of indexing? 
+Can we explain a subset of SQL? You heard about DQL, DLL, and DLL? 
+explain our SOLID principle? 
+How can you identify the performance problem and how to solve it? 
+What is the difference between final, finally, and finalize? 
+What is the difference between static methods, static variables, and static classes in Java? 
+
+===========================================================================================================
+Kinjal Pradhan  
+1. Spring Boot Dependency Explanation. Why we use dependency in SB? 
+2. Comparable v/s Comparator 
+3. Put v/s Patch  
+4. Java Anagram Grouping problems 
+5. Java, JRE&JDK explain 
+6.Why String is Immutable? 
+7. How many try and catch block we can write in 1 Problem 
+8. Micro service life cycle  & Design patter of micro service 
+9. Oops Concepts 
+10. Design patter & Explanation 
+11 Joins in SQL 
+12. Spring boot annotations & Explanations 
+13. Array list v/s Linked list 
+14. Spring v/s Spring Boot 
+15. Sql Queries  like minimum, maximum salary of employees 
+16 Remove duplicate elements from Array list 
+17 Singleton Problem 
+18 Multithreading Life Cycle 
+19 We can use Post Mapping instead of Get Mapping  
+20 Restful Api Methods 
+21 Agile Methology 
+22 Scrum meeting & Sprint Meeting  
+23 Problems in Collections & Stream Api 
+24 Java 8 Features 
+25 We can use functional interface in multiple interface in multiple interface 
+26 How to Convert multiple in interface into Functional interface 
+27 New Features in Java 17 as Compare to Java 8 
+28 Predefine methods in functional interface  
+29 @Spring boot application  is a combination of how many annotations 
+30 What is use of spring security 
+31 One a binding & Two a building in angular  
+32 Angular lifecycle  hooks 
+33 How to convert mutable of control to immutable in Java  
+34 What is 10c Inversion of control & Dependency injection 
+35 Open close principal 
+36 Spring Principal 
+37 Junit & Mockito 
+38 Collections v/s Collectors 
+
+=============================================================================================================
+Vaishnavi 
+1 Spring security & Jwt Token Explain (How to achieve) 
+2 What are the oops concepts (Explain Each) 
+3 Explain  Java 8 Features 
+4 Why string in immutable  
+5 Difference between keyword & Abstract keyword  
+6 Use of default keyword & Abstract keyword 
+7 What is exception 
+8 Can we throw exception in main method  
+9 Can constructor be public, protected & Private in same class 
+10 What is parent class of exception 
+11 Difference between Hash Map & Hash Table 
+12 Difference between Hash Map & Concurrent Hash Table  
+13 Difference between Array list & Linked list 
+14 Difference between Collection & Collections 
+15 Difference between  Hibernate & Jpa 
+16 Difference  between spring & spring boot 
+17 Difference between Rest & Restful 
+18 Difference between HTTP & HTTPS  
+19 Where you here implemented Java 8 Feature & Oops Concept 
+20 What is 400,401,403, 404,500,501,201,200 states 
+21 What is garbage collection 
+22 What is Final, finally, finalize 
+23 What is dispatchers servlet 
+24 What is comparator & comparable  
+25 What @transactional & when to use and why 
+26 @Rest controller why to use this 
+27 Difference between @component & @service 
+28 what is 1st level cache & 2nd level cache 
+29 What are the bean scopes 
+30 Design patterns , solid principle acid properting 
+31 What is Indexing ? why to use 
+32 What one the joins 
+33 @Request body, @response body ,@request param etc 
+34 What is multithreading , what is synchronized 
+35 Null pointer exception when we get 
+36 What is bean ?@Bean where to use 
+37 How to create Immutable class 
+38 How to create singleton class 
+39 What is Spring Mvc 
+40 Difference between Drop & Truncate 
+
+==========================================================================================================
+Swaraj 
+1. Java 8 Features 
+2. Stream Api sorting and mapping ? with employee table  
+3. Difference between Array list and linked list 
+4. What is @component , @transcation , @primary @qualifier 
+5. How does one service communicate with another service 
+6. Difference between @controller & @rest controller 
+7. Difference between Hash map & Hash set 
+8 What are the design patterns 
+9 What is logging 
+10 How do you map you entity class to database 
+
+============================================================================
+Ankit 
+Java & Spring boot 
+1. Difference between Float  & double 
+2 What is Big Decimal 
+3. What is use of @qualifier annotation 
+4 Explain spring boot is lifecycle 
+5 Explain the thread lifecycle 
+6 What is functional interface and when to use it  
+7 How to create a custom exception in Java  
+8 Spring boot data types for performing mathematical operations 
+9 How to handle restful Api responses in spring boot  
+10 Explain @Spring boot Application 
+11 What is handle restful Api responses in spring boot 
+12 what is spring bean and its scope  
+13 How does spring boot manage dependency injection 
+
+=========================================================================
+Angular 
+1 What is a promise in angular 
+2 What is a pipe in angular 
+3  What is the use of observable in angular 
+4 Explain relative forms in angular 
+5 What is difference between Template driver forms and reactive forms in angular 
+6 How to create a custom validator in angular forms 
+7 What is Ngonit and when is it called in angular 
+
+============================================================================================
+SAJID 
+1 Can you explain the executor framework in java and its advantages  
+2 Explain the spring boot auto configuration process 
+3 What are spring boor starters and how they helpful  
+4 How dose spring security integrate with spring boot 
+5 What is the purpose of the @transactional  annotation and how does it work 
+6 How do you configure multiple data sources in a spring boot application 
+7 What is the difference between monolithic and micro services architecture 
+8 What is the role of an Api gateway and which tool have you used 
+9 How do you ensure fault tolerance in micro services 
+10 How would you design A Micro services to be scalable and loosely coupled 
+
+
+
+
+=======================================================================================
+Anand Prasad 
+1 Why java is platform Independent 
+2 Principle of Oops 
+3 Immutable in Java 
+4 Difference between Abstract class , Interface 
+5 Difference  between Final vs Finally vs Finalized 
+6 Indexing in Database with internal working 
+7 Difference between List & Array list  
+8 If we use JPA In 1st Project   , Hibernate in 2nd Project , JPA + Hibernate in 3rd Project which will 
+run faster 
+
+===============================================================================================
+9 Spring ORM 
+10 Design pattern in Java  
+11 Design pattern in Micro services 
+12 How we handle exception in spring boot 
+13 How we handle exception in spring boot 
+14 Define Restful web services 
+15 How we implement two database in spring boot 
+
+=====================================================================================================================================================
+Subhasmita Mohanty 
+Core Java 
+1 What are the difference between Array list & Linked list 
+2 Explain Oop concepts in Javas 
+3 What is the singleton design pattern & How do you implement it in java 
+4 What are Functional interfaces & how are they used in java 
+5 what is java memory management , explain the role of heap & stack  
+6 What is the default method in an interface 
+7 Difference between checked & unchecked exception  
+8 What is reflection in java , How is it used 
+9 Concept of stream in Java 8 
+10 String , string builder , String Buffer 
+
+======================================================================================
+My SQL 
+1 Explain Acid Properties 
+2 Indexes in My Sql  
+3 How you optimize slow Sql queries 
+4 What is stored procedure 
+5 JOIN 
+6 Normalization Vs Denormalization 
+
+================================================================================================
+Spring Boot 
+1 Key features of spring boot . How does it differ from the traditional spring framework 
+2 Explain the role of @spring boot Application annotation 
+3 What is dependency injection in spring , what are different types of dependency injection in 
+spring 
+4 How do you configure properties in spring boot 
+5 Spring boot Actuator 
+6 Spring Boot handle exception 
+7 What are profiles in spring boot 
+8 How to create RESTFUL API in spring boot , explain 
+9 Spring Security 
+10 Transactions in Spring Boot 
+
+=================================================================================================
+Scenario  
+1 Your application is querying a large dataset & the response time is slow. How would you 
+optimize the performance of the database 
+2 You are building a RESTAPI using spring boot & you need to handle custom exception like 
+Resource Not Found Exception globally . How would you implement this 
+3 Your API needs to allow users to upload & download large files. What approach would you 
+take to ensure efficient & secure file handling 
+
+=======================================================================================================
+Shrunga S 
+1 How do you handle exception in spring boot  
+2 What are the main features of Java 8 
+3 Difference between Hash map & Hash table 
+4 How does the final keyword work in java  
+5 What is the difference between method overloading and method overriding  
+6 What is an abstract class, How is it different from an interface 
+7 How does java handle exception , explain try catch-finally 
+8 What is the difference between Array list and linked list 
+9  What is the difference between Throw & throws 
+10 How would you optimize a java application for  better  performance  
+11 Explain different spring boot annotation (@qualifier, @transactional, @controller etc) 
+12 Difference between spring and spring boot  
+13 What is the start point and end point of spring boot application 
+14 Explain the internal working of hash map 
+ 
