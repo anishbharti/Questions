@@ -1,0 +1,434 @@
+		Interview Answer for JVM
+
+JVM stands for Java Virtual Machine. It is responsible for converting Java bytecode into machine code and executing it. It provides platform independence because bytecode can run on any operating system having JVM installed. JVM also handles memory management, garbage collection, class loading, and runtime execution.
+
+
+
+Interview Answer for JRE
+
+JRE stands for Java Runtime Environment. It provides the runtime environment required to execute Java applications. JRE includes JVM, Java libraries, and supporting files but does not contain development tools like compiler. It is mainly used when users only need to run Java applications.
+
+
+Interview Answer for JDK
+
+JDK stands for Java Development Kit. It is a complete package used for developing Java applications. It contains JRE along with development tools such as compiler, debugger, documentation tools, and packaging utilities. Developers use JDK to write, compile, test, and deploy Java applications.
+
+
+Short Interview Summary (2-Minute Answer)
+
+JVM is the execution engine that converts Java bytecode into machine code and provides memory management and garbage collection. JRE provides the runtime environment required to run Java applications and contains JVM plus libraries. JDK is the complete development kit containing JRE and tools like compiler, debugger, and packaging utilities. In short, JDK is used for development, JRE for running applications, and JVM for executing bytecode.
+=======================================================================================================================================================
+-<<<<<<-------------------------------------How do u handle exception in your project---------------------------------------------->>>>>>>
+Real Project Example (Payment Service)
+
+"In payment microservice, if payment gateway failed, I used custom exceptions like PaymentFailedException. These were handled using global exception handling, logged using SLF4J, and returned meaningful responses with status codes so frontend could understand failures."
+
+Strong Interview Answer (2-minute version)
+
+"In my project, I mainly used global exception handling using @RestControllerAdvice and @ExceptionHandler. I created custom exceptions for business cases, handled validation errors separately, logged exceptions using SLF4J, and returned proper HTTP status codes with standardized error responses. This reduced duplicate code and improved maintainability."
+
+This answer sounds stronger than saying only try-catch blocks because it shows project-level handling.
+
+
+======================================================================================================================================================
+
+Short Interview Version (2–3 Minutes)------------>  Java 8 new features added
+
+Java 8 was a major release that introduced functional programming concepts. Important features include Lambda Expressions for reducing boilerplate code, Stream API for collection processing, Functional Interfaces to support lambdas, Optional for null handling, new Date-Time API for thread-safe date operations, Method References, Default and Static methods in interfaces, Parallel Streams, and CompletableFuture for asynchronous programming. These features improved readability, performance, and maintainability of enterprise applications.
+
+
+Functional Interface in Java 8 is an interface that contains exactly one abstract method and is mainly introduced to support lambda expressions and functional programming. We can annotate it with @FunctionalInterface to enforce compile-time checking. It can also contain multiple default and static methods. Common examples are Predicate, Consumer, Supplier, and Function. In projects, I have used functional interfaces extensively with streams and lambda expressions to reduce boilerplate code.
+
+------------------------------------------------
+
+Why Default Methods are Used in Java 8?
+Problem Before Java 8:
+
+Suppose you have an interface:
+
+interface Vehicle {
+    void start();
+}
+
+Many classes implement it:
+
+class Car implements Vehicle {
+    public void start() {
+        System.out.println("Car Started");
+    }
+}
+
+Now imagine after 5 years you want to add a new method:
+
+interface Vehicle {
+    void start();
+    void stop();   // newly added
+}
+
+Problem:
+
+Every implementing class breaks
+All classes must implement stop()
+Existing projects become incompatible
+Solution: Default Method
+interface Vehicle {
+
+    void start();
+
+    default void stop() {
+        System.out.println("Vehicle stopped");
+    }
+}
+
+Now existing classes continue working because interface provides implementation.
+
+Interview Answer:
+
+"Default methods were introduced in Java 8 mainly for backward compatibility. They allow adding new functionality to interfaces without breaking existing implementations. They are also heavily used in Collections API and Streams."
+
+Example:
+interface Animal {
+
+    void sound();
+
+    default void sleep() {
+        System.out.println("Sleeping");
+    }
+}
+
+class Dog implements Animal {
+
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+
+Usage:
+
+Dog d = new Dog();
+
+d.sound();
+d.sleep();
+Why Static Methods are Used in Interfaces?
+
+Static methods are added when a method:
+
+Belongs to interface itself
+Does not depend on object state
+Provides utility/helper functionality
+Example:
+interface Calculator {
+
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+
+Call:
+
+System.out.println(Calculator.add(10,20));
+
+Output:
+
+30
+Why not default?
+
+Default methods require object creation:
+
+obj.method()
+
+Static methods:
+
+InterfaceName.method()
+
+No object required.
+
+Real Reason Java Added Static Methods
+
+Before Java 8, utility classes were used:
+
+Collections.sort(list);
+
+Java 8 added many static methods inside interfaces themselves:
+
+Example:
+
+List.of()
+Comparator.comparing()
+Map.entry()
+
+This keeps related utilities inside the interface.
+
+
+
+
+
+-----------------------------------------------------------------------------
+
+
+
+1. Lambda Expressions
+What is it?
+
+Lambda expressions introduced functional programming style into Java.
+
+Before Java 8:
+
+Runnable r = new Runnable() {
+   @Override
+   public void run() {
+      System.out.println("Running");
+   }
+};
+
+Java 8:
+
+Runnable r = () -> System.out.println("Running");
+
+
+
+
+
+
+
+
+=============================================================================================================================================
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------SQL--------------------------------------->>>>>>>>>>>>>>>>>>
+
+"A trigger in SQL is a database object that automatically executes in response to events like INSERT, UPDATE, or DELETE on a table. It can be used for auditing, validation, and enforcing business rules. Triggers can be BEFORE or AFTER based on when they execute."
+
+
+
+
+====================================================================
+
+
+Explain @SpringBootApplication
+
+@SpringBootApplication combines three annotations.
+
+@SpringBootApplication
+
+Internally:
+
+@Configuration
++
+@EnableAutoConfiguration
++
+@ComponentScan
+
+Responsibilities:
+
+Auto configuration
+Component scanning
+Bean creation
+
+Example:
+
+@SpringBootApplication
+
+public class App{
+
+public static void main(
+String[] args){
+
+SpringApplication.run(
+App.class,args);
+
+}
+
+}
+
+This annotation is the entry point of Spring Boot applications.
+
+
+
+
+==================================================================================================================================================================
+       JAVA 8 Features
+
+1. Lambda Expressions
+
+Lambda expressions allow writing anonymous functions without creating separate classes.
+-----------------------------------------------------------------------
+2. Stream API
+
+Stream API is used to process collections in a functional way.
+
+Common Operations:
+filter()
+map()
+sorted()
+collect()
+distinct()
+reduce()
+
+Interview Point: Stream API helps perform complex collection operations with minimal code.
+
+-----------------------------------------------------------------------------
+3. Functional Interfaces
+
+A Functional Interface contains exactly one abstract method.
+
+Examples:
+
+Runnable
+Callable
+Comparator
+Predicate
+Consumer
+Supplier
+
+-------------------------------------------------------------
+4. Method References
+
+Method references provide a shorter syntax for lambda expressions.
+
+Example:
+
+List<String> names = Arrays.asList("Java", "Spring");
+
+names.forEach(System.out::println);
+
+Instead of:
+
+names.forEach(name -> System.out.println(name));
+Types:
+Static Method Reference
+Instance Method Reference
+Constructor Reference
+
+------------------------------------------------------------
+5. Optional Class
+
+Optional helps avoid NullPointerException.
+
+Before Java 8:
+
+if(employee != null){
+    System.out.println(employee.getName());
+}
+
+Java 8:
+
+Optional<Employee> emp = repo.findById(1);
+
+emp.ifPresent(System.out::println);
+Benefits:
+Better null handling
+Cleaner code
+Reduces NullPointerException
+
+-------------------------------------------------------------
+
+6. Default Methods in Interface
+
+Before Java 8, interfaces could only contain abstract methods.
+
+Java 8 introduced default methods.
+
+interface Vehicle {
+
+    default void start() {
+        System.out.println("Vehicle Started");
+    }
+}
+Benefit:
+
+Allows adding new methods to interfaces without breaking existing implementations.
+
+----------------------------------------------------------------------------------
+
+7. Static Methods in Interface
+
+Interfaces can now contain static methods.
+
+interface MathUtil {
+
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+
+Usage:
+
+MathUtil.add(10,20);
+
+--------------------------------------------------------------------------------
+
+8. New Date and Time API
+
+Java 8 introduced the java.time package.
+
+Classes:
+
+LocalDate
+LocalTime
+LocalDateTime
+ZonedDateTime
+
+Example:
+
+LocalDate today = LocalDate.now();
+
+System.out.println(today);
+Benefits:
+Immutable
+Thread-safe
+Easier date manipulation
+
+--------------------------------------------------------
+
+9. Parallel Streams
+
+Parallel Streams allow processing data using multiple CPU cores.
+
+numbers.parallelStream()
+       .forEach(System.out::println);
+Benefit:
+
+Improves performance for large datasets.
+
+----------------------------------------------------------
+
+10. forEach Method
+
+Introduced in Iterable Interface.
+
+List<String> names =
+        Arrays.asList("Java", "Spring");
+
+names.forEach(System.out::println);
+
+Reduces boilerplate looping code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

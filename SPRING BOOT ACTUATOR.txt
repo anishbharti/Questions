@@ -1,0 +1,58 @@
+How I Used Spring Boot Actuator and Spring Boot Admin in My Microservices Project
+
+In my project, we had a microservices-based architecture consisting of multiple services such as Order Service, Cart Service, Product Service, Payment Service, and Notification Service. Since these services were deployed independently and communicated with each other, monitoring their health and performance was a critical requirement. To achieve this, we used Spring Boot Actuator along with Spring Boot Admin for centralized monitoring.
+
+Initially, we enabled Spring Boot Actuator in all microservices by adding the spring-boot-starter-actuator dependency. Actuator provided several built-in endpoints such as /actuator/health, /actuator/info, /actuator/metrics, /actuator/env, and /actuator/beans. These endpoints helped us monitor the runtime status of each microservice without logging into the servers directly.
+
+For example, if a business user reported that order creation was failing, our first step was to verify the health of the involved services. We would check the health endpoint of Order Service and Payment Service. If Order Service was healthy but Payment Service showed a DOWN status, we could quickly identify the root cause and reduce troubleshooting time.
+
+Since manually accessing Actuator endpoints for every microservice was not practical, especially when multiple services were running in different environments, we implemented a centralized monitoring solution using Spring Boot Admin.
+
+We created a dedicated Monitoring Service and configured it as a Spring Boot Admin Server. Each microservice was configured as a Spring Boot Admin Client and automatically registered itself with the Admin Server during startup. This allowed us to monitor all microservices from a single dashboard.
+
+The Spring Boot Admin dashboard displayed:
+
+Service availability (UP/DOWN)
+JVM memory utilization
+CPU consumption
+Thread statistics
+HTTP request metrics
+Garbage collection metrics
+Environment properties
+Application logs
+Endpoint response times
+
+Whenever any microservice became unavailable, the dashboard immediately reflected its status. This significantly improved operational visibility and helped the support team respond quickly to incidents.
+
+We also leveraged Actuator metrics for performance monitoring. During production issues, we frequently analyzed metrics such as:
+
+Request count
+Error count
+Average response time
+JVM heap memory usage
+Active threads
+Database connection pool statistics
+
+For example, if users experienced slow response times while placing orders, we would inspect Actuator metrics to determine whether the issue was caused by high CPU usage, memory pressure, excessive thread consumption, or downstream service latency.
+
+Another important use case was dependency monitoring. Some services depended on databases and external APIs. We implemented custom Health Indicators to verify the availability of these dependencies. As a result, the /actuator/health endpoint provided a comprehensive health status not only for the application itself but also for connected databases and external services.
+
+From a production support perspective, Spring Boot Actuator was one of the most useful tools for troubleshooting. Instead of relying solely on application logs, we could quickly determine whether an issue was related to service health, resource utilization, configuration problems, or dependency failures.
+
+Our overall monitoring architecture looked like this:
+
+Order Service        ---> Actuator
+Cart Service         ---> Actuator
+Product Service      ---> Actuator
+Payment Service      ---> Actuator
+Notification Service ---> Actuator
+                                |
+                                V
+                    Spring Boot Admin Server
+                                |
+                                V
+                    Centralized Monitoring UI
+
+This setup provided a single pane of glass for monitoring all microservices. It improved system observability, reduced Mean Time to Resolution (MTTR), and enabled the production support team to proactively identify and resolve issues before they impacted end users.
+
+In summary, I used Spring Boot Actuator to expose health, metrics, and application monitoring endpoints in each microservice, and Spring Boot Admin to aggregate and visualize these metrics centrally. This helped us monitor service health, troubleshoot production incidents, analyze performance bottlenecks, and maintain high application availability in a microservices environment.

@@ -1,0 +1,172 @@
+1. Explain ACID Properties
+
+ACID properties ensure reliable and consistent transaction processing in databases, which is very important in enterprise systems like Bajaj Insurance policy management or claims processing, where financial data integrity is critical.
+
+1. Atomicity
+
+A transaction is either fully completed or fully rolled back. For example, in a Bajaj claims system, if claim approval and payment update are two steps, both must succeed or both fail.
+
+2. Consistency
+
+Database moves from one valid state to another. Example: After premium payment, policy status must always remain valid and updated correctly.
+
+3. Isolation
+
+Multiple transactions run independently. If two users update the same policy, changes don’t interfere.
+
+4. Durability
+
+Once a transaction is committed (e.g., claim payout), it remains permanent even after system crash.
+
+👉 In Bajaj systems, ACID ensures no data mismatch in policy, payment, and claims modules.
+
+2. Indexes in MySQL
+
+Indexes in MySQL improve the speed of data retrieval operations, especially in large enterprise systems like Bajaj Insurance where tables like policy, customer, claims contain millions of records.
+
+An index is similar to a book index that helps the database quickly locate rows without scanning the full table.
+
+Types:
+Primary Index (on primary key)
+Unique Index
+Composite Index (multiple columns)
+Full-text Index
+
+Example:
+
+CREATE INDEX idx_policy_number ON policy(policy_number);
+Benefits:
+Faster SELECT queries
+Efficient filtering and sorting
+Improves JOIN performance
+Drawback:
+Slows INSERT/UPDATE/DELETE because index must be updated
+
+👉 In Bajaj project, indexing is commonly used on policy_id, customer_id, claim_id to speed up search APIs.
+
+3. How you optimize slow SQL queries
+
+Optimizing SQL queries is critical in production systems like Bajaj Insurance microservices, where APIs must respond quickly for policy search, claims status, or payment history.
+
+Optimization techniques:
+Use Indexes
+Ensure proper indexing on frequently searched columns like policy_id or customer_id.
+**Avoid SELECT ***
+Fetch only required columns to reduce data load.
+Use WHERE clause efficiently
+Filter data early instead of processing full tables.
+Analyze query using EXPLAIN
+Helps understand full table scans vs index usage.
+Optimize JOINs
+Use proper join conditions and avoid unnecessary joins.
+Pagination
+Use LIMIT instead of fetching all records.
+Avoid subqueries where possible
+Replace with JOINs.
+
+👉 In Bajaj project, optimizing queries reduced response time of claim search APIs from seconds to milliseconds.
+
+4. What is Stored Procedure
+
+A stored procedure is a precompiled SQL program stored in the database that can be executed multiple times.
+
+In Bajaj Insurance systems, stored procedures are often used for complex business logic like premium calculation, claim settlement, or report generation.
+
+Example:
+CREATE PROCEDURE GetPolicyDetails(IN pid INT)
+BEGIN
+   SELECT * FROM policy WHERE policy_id = pid;
+END;
+Advantages:
+Improves performance (precompiled)
+Reduces network traffic (logic executed in DB)
+Enhances security (restricted direct table access)
+Reusable logic
+Disadvantages:
+Harder to maintain compared to application code
+Database dependency increases
+
+👉 In Bajaj systems, stored procedures are used for batch processing of payments and monthly reporting of policies and claims.
+
+5. JOIN in SQL
+
+JOIN is used to combine rows from two or more tables based on a related column. In Bajaj Insurance project, JOINs are heavily used to connect customer, policy, and claims tables.
+
+Types of JOIN:
+1. INNER JOIN
+
+Returns matching records from both tables.
+
+SELECT c.name, p.policy_number
+FROM customer c
+INNER JOIN policy p ON c.id = p.customer_id;
+2. LEFT JOIN
+
+Returns all records from left table + matching right table.
+
+3. RIGHT JOIN
+
+Returns all records from right table.
+
+4. FULL JOIN (not in MySQL directly)
+Use in Bajaj:
+Customer policy mapping
+Claim history with policy details
+Payment tracking
+
+👉 JOINs help build API responses combining multiple microservices database tables.
+
+6. Normalization vs Denormalization
+
+Normalization and denormalization are database design techniques used to balance performance and data consistency in systems like Bajaj Insurance policy & claims database.
+
+Normalization
+
+Normalization is the process of dividing large tables into smaller related tables to reduce redundancy.
+
+Example:
+Instead of storing customer and policy in one table, separate them.
+
+Benefits:
+Reduces data duplication
+Improves data integrity
+Easier maintenance
+Drawback:
+Requires more JOIN operations (slower reads)
+Denormalization
+
+Denormalization combines tables or adds redundant data to improve read performance.
+
+Benefits:
+Faster read queries
+Fewer JOINs
+Useful for reporting systems
+Drawback:
+Data redundancy
+Risk of inconsistency
+In Bajaj Project Context:
+Normalized structure is used in transactional systems (policy creation, claims processing)
+Denormalized structure is used in reporting dashboards and analytics (claim reports, premium summaries)   
+
+
+========================================================================================================================
+
+Interview Ready Answer
+
+“UNION combines results from multiple SELECT statements and removes duplicate records, whereas UNION ALL combines results without removing duplicates. UNION is slower because it performs additional operations to eliminate duplicates, while UNION ALL is faster and commonly used in large-scale applications when duplicate data is acceptable.”
+
+Important Rule
+
+Both queries must have:
+
+Same number of columns
+Compatible data types
+Same column order
+
+Example:
+
+SELECT id, name FROM employee
+UNION
+SELECT emp_id, emp_name FROM customer;
+
+This works because column count and types match.

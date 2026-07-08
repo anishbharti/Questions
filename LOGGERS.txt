@@ -1,0 +1,210 @@
+==========================LOGGERS=============================================================================================================================
+-------------------------------------------------------------------------------------------------
+1. What logging framework have you used in your project?
+
+Answer:
+
+In our Spring Boot microservices project, we used SLF4J as the logging facade and Logback as the underlying logging implementation. Spring Boot provides Logback by default, and we used Lombok's @Slf4j annotation to generate loggers and write logs at different levels such as INFO, DEBUG, WARN, and ERROR.
+------------------------------------------------------------------------------------------------
+
+2. What is SLF4J and why do we use it?
+
+Answer:
+
+SLF4J stands for Simple Logging Facade for Java. It is not a logging framework but an abstraction layer that allows us to switch between Logback, Log4j, and Log4j2 without changing application code. This provides flexibility and maintainability.
+
+------------------------------------------------------------------------------------------------
+3. Why not use System.out.println()?
+
+Answer:
+
+System.out.println() is suitable only for development and debugging. In production, it does not provide log levels, filtering, formatting, centralized storage, or monitoring capabilities. Logging frameworks provide structured and configurable logging.
+
+-------------------------------------------------------------------------------------------------
+4. Explain the logging architecture.
+
+Answer:
+
+The logging architecture consists of Logger, Layout, and Appender. Logger generates log messages, Layout formats the messages, and Appender decides where the logs are written, such as console, file, database, or centralized logging systems.
+
+--------------------------------------------------------------------------------------------------
+5. What are Appenders?
+
+Answer:
+
+Appenders determine the destination of log messages. Common appenders include ConsoleAppender for console logs, FileAppender for file-based logging, and RollingFileAppender, which creates new log files when size limits are reached.
+
+----------------------------------------------------------------------------------------------------
+6. What log levels have you used?
+
+Answer:
+
+I have used TRACE, DEBUG, INFO, WARN, and ERROR.
+
+TRACE → Method entry and exit
+DEBUG → Developer debugging information
+INFO → Business flow information
+WARN → Potential issues
+ERROR → Application failures and exceptions
+
+----------------------------------------------------------------------------------------------------
+7. Which log level is most commonly used in production?
+
+Answer:
+
+INFO is the most commonly used production log level because it provides useful business and operational information without generating excessive logs.
+
+
+----------------------------------------------------------------------------------------------------
+8. Difference between INFO and DEBUG?
+
+Answer:
+
+INFO is used for important application events such as user registration or order creation. DEBUG provides detailed execution information useful during development and troubleshooting.
+
+------------------------------------------------------------------------------------------------------
+9. How do you enable DEBUG logs?
+
+Answer:
+
+logging.level.root=DEBUG
+
+This enables DEBUG logs for the entire application.
+
+------------------------------------------------------------------------------------------------------
+10. How do you write logs to a file?
+
+Answer:
+
+logging.file.name=app.log
+
+This configuration stores application logs in the specified log file.
+
+-------------------------------------------------------------------------------------------------------
+11. How have you implemented logging in your project?
+
+Answer:
+
+We added logging in Controller, Service, and Exception handling layers. INFO logs were used for successful business operations, WARN for validation issues, and ERROR for exceptions. These logs helped us troubleshoot production issues quickly.
+
+--------------------------------------------------------------------------------------------------------
+12. What would you log in an Order Service?
+
+Answer:
+
+I would log order creation requests, validation failures, inventory checks, payment status, successful order completion, and exception details using appropriate log levels.
+
+---------------------------------------------------------------------------------------------------------
+13. Why should sensitive information not be logged?
+
+Answer:
+
+Sensitive information such as passwords, JWT tokens, credit card numbers, and personal data should never be logged because logs are accessible to multiple teams and may create security risks.
+
+---------------------------------------------------------------------------------------------------------
+14. What is ELK?
+
+Answer:
+
+ELK stands for Elasticsearch, Logstash, and Kibana. It is used for centralized logging, log analysis, monitoring, and visualization.
+
+---------------------------------------------------------------------------------------------------------
+15. Explain ELK architecture.
+
+Answer:
+
+Application logs are collected by Logstash, stored and indexed in Elasticsearch, and visualized using Kibana dashboards.
+
+Flow:
+
+Application Logs
+      ↓
+   Logstash
+      ↓
+ Elasticsearch
+      ↓
+    Kibana
+
+------------------------------------------------------------------------------------------------------------
+16. Why do we use ELK when log files already exist?
+
+Answer:
+
+In microservices environments, logs are distributed across multiple servers and containers. ELK centralizes all logs in one place and provides powerful search, filtering, visualization, and monitoring capabilities.
+
+
+------------------------------------------------------------------------------------------------------------
+17. What is Kibana?
+
+Answer:
+
+Kibana is the visualization component of ELK. It allows developers and support teams to search logs, create dashboards, generate reports, and monitor application health in real time.
+
+
+------------------------------------------------------------------------------------------------------------
+18. What is Elasticsearch?
+
+Answer:
+
+Elasticsearch is a distributed search and analytics engine that stores logs and enables very fast querying and filtering of large volumes of log data.
+
+
+-------------------------------------------------------------------------------------------------------------
+19. What is Logstash?
+
+Answer:
+
+Logstash is a data processing pipeline that collects logs, transforms them if necessary, and forwards them to Elasticsearch.
+
+
+------------------------------------------------------------------------------------------------------------
+20. Production Scenario Question
+A customer reports an issue in production. How do you investigate?
+
+Answer:
+
+First, I identify the request ID, user ID, or order ID associated with the issue. Then I search centralized logs in Kibana using filters. I analyze INFO, WARN, and ERROR logs around the failure timestamp, trace the request across microservices, identify the root cause, and validate the fix before deployment.
+
+
+------------------------------------------------------------------------------------------------------------
+21. Why use @Slf4j?
+
+Answer:
+
+@Slf4j automatically creates a logger instance, eliminating the need to manually create LoggerFactory objects and reducing boilerplate code.
+
+Example:
+
+@Slf4j
+@Service
+public class UserService {
+}
+
+
+-------------------------------------------------------------------------------------------------------------
+22. Scenario-Based Question
+Application performance is slow. How can logs help?
+
+Answer:
+
+Logs help identify slow API calls, database queries, external service delays, and exception patterns. By analyzing timestamps and execution flow, we can pinpoint performance bottlenecks.
+
+
+-------------------------------------------------------------------------------------------------------------
+23. Difference between Log4j and Logback?
+
+Answer:
+
+Logback is the successor of Log4j and is the default logging framework in Spring Boot. It provides better performance, simpler configuration, and native integration with Spring Boot.
+
+---------------------------------------------------------------------------------------------------------------
+24. What logging tool did you use in production?
+
+Answer:
+
+We used Spring Boot with SLF4J and Logback for log generation and ELK Stack (Elasticsearch, Logstash, Kibana) for centralized log aggregation, monitoring, and troubleshooting.
+
+Most Important Interview Answer
+How did you use logging in your project?
+
+In our Spring Boot microservices application, we used SLF4J with Logback for logging. We implemented logs across Controller, Service, and Exception Handling layers using INFO, DEBUG, WARN, and ERROR levels. Logs were written to files and centralized using the ELK stack. Kibana dashboards helped us monitor application health, analyze failures, and troubleshoot production issues efficiently. This significantly reduced issue resolution time and improved system observability.

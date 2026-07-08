@@ -1,0 +1,60 @@
+❓ Q11: What challenges did you face during this project?
+
+One major challenge was managing communication between microservices and handling distributed workflows correctly. Initially, coordinating Cart Service, Order Service, and Payment Service was difficult because multiple services depended on each other. I solved this using Feign Clients and clear service boundaries. Another challenge was handling JSON serialization issues caused by bidirectional entity relationships. I resolved this using annotations like @JsonManagedReference and @JsonBackReference. Integrating AWS S3 and Stripe APIs also required careful configuration and error handling. Additionally, ensuring proper database relationships and preventing circular references in REST responses required debugging and optimization. These challenges helped me understand distributed system design and real-world backend development practices.
+
+
+
+
+
+
+
+
+🚀 1. Service is slow in production. How do you debug?
+✅ Answer (100+ words)
+
+When a service becomes slow in production, I follow a structured approach instead of guessing. First, I check monitoring dashboards like CPU, memory, and thread usage to identify resource bottlenecks. Then I analyze logs to see if there are repeated errors or slow external calls. I also verify database performance by checking slow queries and connection pool usage. If the service depends on other microservices, I trace the request flow using distributed tracing tools to identify latency points. In many cases, I’ve found issues like unoptimized queries, excessive API calls, or thread blocking. I also check garbage collection behavior if it’s a Java service. Based on findings, I optimize queries, introduce caching, or use asynchronous processing to improve performance.
+
+🚀 2. Kafka consumer is not consuming messages. What will you check?
+✅ Answer (100+ words)
+
+If a Kafka consumer is not consuming messages, I first verify whether the consumer is running and properly connected to the Kafka cluster. Then I check if the correct topic and consumer group ID are configured. A common issue is offset mismanagement, so I inspect whether the consumer has already consumed messages and committed offsets, making it appear idle. I also check if there is a lag using monitoring tools. If lag exists, I investigate whether the consumer is stuck due to processing errors. Additionally, I verify partition assignment—if partitions are not assigned properly, the consumer may not receive data. I also check deserialization issues or exceptions in logs that might silently fail consumption. Finally, I restart the consumer and test with new messages to validate the fix.
+
+🚀 3. Database is slow. How do you troubleshoot?
+✅ Answer (100+ words)
+
+When the database becomes slow, I start by analyzing slow query logs to identify expensive queries. I check whether indexes are properly used or missing, as this is a common cause of performance degradation. I also review query execution plans to understand how the database is processing requests. Then I check connection pool settings because too many or too few connections can impact performance. I monitor CPU, memory, and disk I/O usage on the database server. In microservices, I also verify whether there are excessive or redundant queries being executed due to improper fetching strategies like eager loading. If required, I optimize queries, add indexes, or introduce caching mechanisms such as Redis to reduce database load. In some cases, scaling the database or using read replicas is necessary.
+
+🚀 4. Application is throwing OutOfMemoryError. What will you do?
+✅ Answer (100+ words)
+
+When I encounter an OutOfMemoryError in a Java application, I first check heap usage using monitoring tools or JVM metrics. I analyze heap dumps using tools like Eclipse MAT to identify memory leaks or objects consuming excessive memory. Common causes include large collections, improper caching, or objects not being garbage collected due to strong references. I also check for infinite loops or improper thread handling that might retain objects. Additionally, I review GC logs to understand memory behavior. If the issue is due to insufficient heap size, I increase JVM memory settings temporarily, but I focus on fixing the root cause. In microservices, I’ve often seen memory issues due to large payload processing or improper batching, which can be optimized by streaming or chunking data.
+
+🚀 5. API is failing intermittently. How do you debug?
+✅ Answer (100+ words)
+
+For intermittent API failures, I first check logs to identify patterns such as specific endpoints, time intervals, or error codes. I verify whether the issue is due to downstream service failures by tracing requests across microservices. I also check network-related issues like timeouts or DNS problems. Circuit breaker metrics help determine if the service is failing due to dependency issues. I analyze whether the failures are due to load spikes by checking traffic and resource utilization. Sometimes intermittent failures are caused by race conditions or thread-safety issues, so I review concurrent code. I also validate whether retries are configured properly. In my experience, intermittent failures are often linked to external service instability or improper timeout settings, which can be fixed using retries and fallback mechanisms.
+
+🚀 6. Messages are duplicated in Kafka/SQS. How do you handle it?
+✅ Answer (100+ words)
+
+Duplicate messages are common in distributed systems because both Kafka and SQS provide at-least-once delivery guarantees. To handle this, I design idempotent consumers so that processing the same message multiple times does not create duplicate effects. I use unique identifiers such as transactionId or policyId and store them in the database to check if the message has already been processed. If it exists, I skip processing. Additionally, I use database constraints like unique keys to prevent duplicate inserts. In Kafka, I can also use idempotent producers and transactions for stronger guarantees. In SQS FIFO queues, I can use deduplication IDs. In my project, this approach ensured that even if messages were retried or reprocessed, business operations like payments or policy creation were not duplicated.
+
+🚀 7. Microservice is not reachable. What steps will you take?
+✅ Answer (100+ words)
+
+If a microservice is not reachable, I start by verifying whether the service is running and healthy. I check health endpoints and logs for startup errors. Then I verify network connectivity, including service URLs, ports, and DNS resolution. If the system uses a service registry, I check whether the service is registered correctly. I also inspect load balancer configurations to ensure traffic is routed properly. In cloud environments, I check security groups and firewall rules that might block communication. If the service is crashing repeatedly, I analyze logs to identify root causes like configuration errors or dependency failures. I also test the service locally or via direct IP to isolate the issue. In many cases, issues arise from incorrect configuration or deployment errors.
+
+🚀 8. How do you debug a production issue without direct access?
+✅ Answer (100+ words)
+
+When I don’t have direct access to production, I rely on logs, monitoring tools, and observability systems. I analyze centralized logs to understand request flow and identify errors. I use metrics dashboards to check system health, including CPU, memory, and latency. Distributed tracing helps track requests across services to identify bottlenecks. If possible, I reproduce the issue in staging or lower environments using similar data. I also collaborate with operations or DevOps teams to gather additional insights. I focus on identifying patterns rather than isolated incidents. In my experience, most production issues can be diagnosed effectively using logs and metrics without direct server access, provided proper observability is in place.
+
+🚀 9. Thread deadlock issue—how do you identify and fix it?
+✅ Answer (100+ words)
+
+To identify a thread deadlock, I first capture thread dumps using tools like jstack or monitoring tools. In the thread dump, I look for threads waiting on each other’s locks, which indicates a deadlock. I analyze the code to find synchronized blocks or locks causing circular dependencies. To fix it, I ensure consistent lock ordering so threads acquire locks in the same sequence. I also minimize the use of synchronized blocks and prefer concurrent utilities like ReentrantLock or atomic classes. In some cases, I redesign the logic to avoid shared mutable state. Deadlocks are critical in production systems, so I also add monitoring and alerts to detect them early and prevent system hangs.
+
+🚀 10. How do you approach debugging in general?
+✅ Answer (100+ words)
+
+My debugging approach is systematic and data-driven. First, I clearly understand the problem and try to reproduce it. Then I collect evidence from logs, metrics, and monitoring tools instead of making assumptions. I isolate the issue by narrowing down components step by step, such as checking API, service, database, and external dependencies. I use tools like logs, debuggers, and tracing systems to identify the root cause. Once identified, I fix the issue and validate the solution thoroughly. I also add proper logging and monitoring to prevent similar issues in the future. I believe debugging is not just about fixing issues but also improving system observability and resilience.

@@ -1,0 +1,69 @@
+
+
+
+
++-------------------------+----------------------------------+--------------------------------------+
+| Feature                 | MySQL                            | PostgreSQL                           |
++-------------------------+----------------------------------+--------------------------------------+
+| Auto Increment          | AUTO_INCREMENT                   | SERIAL / GENERATED AS IDENTITY       |
+| Limit Rows              | LIMIT 5                          | LIMIT 5 (same)                       |
+| Current Date/Time       | NOW()                            | NOW() / CURRENT_TIMESTAMP            |
+| String Concatenation    | CONCAT(name, city)              | name || city OR CONCAT()             |
+| Case Insensitive Search | LIKE (depends on collation)     | ILIKE                                |
+| Boolean Type            | BOOLEAN -> internally TINYINT   | Native BOOLEAN                       |
+| Upsert                  | ON DUPLICATE KEY UPDATE         | ON CONFLICT DO UPDATE                |
+| JSON Support            | JSON                             | JSON and faster JSONB                |
+| Pagination              | LIMIT offset,count              | LIMIT count OFFSET offset            |
++-------------------------+----------------------------------+--------------------------------------+
+
+
+Examples:
+1. Auto Increment
+
+MySQL
+
+CREATE TABLE employee(
+ id INT AUTO_INCREMENT PRIMARY KEY
+);
+
+PostgreSQL
+
+CREATE TABLE employee(
+ id SERIAL PRIMARY KEY
+);
+2. Upsert
+
+MySQL
+
+INSERT INTO employee(id,name)
+VALUES(1,'Anish')
+ON DUPLICATE KEY UPDATE name='Anish';
+
+PostgreSQL
+
+INSERT INTO employee(id,name)
+VALUES(1,'Anish')
+ON CONFLICT(id)
+DO UPDATE SET name='Anish';
+3. Case-insensitive search
+
+MySQL
+
+SELECT * FROM employee
+WHERE name LIKE 'anish';
+
+PostgreSQL
+
+SELECT * FROM employee
+WHERE name ILIKE 'anish';
+Interview-ready answer:
+
+"Most standard SQL syntax is similar in MySQL and PostgreSQL, but differences exist in auto-increment fields, upsert operations, string handling, case-insensitive searches, and advanced features like JSONB and partitioning."
+
+JSON B meaning
+
+JSONB stands for JSON Binary in PostgreSQL.
+
+What is JSONB?
+
+JSONB stores JSON data in a binary format, which makes querying, indexing, and searching faster compared to normal JSON storage.

@@ -1,0 +1,255 @@
+===========================================================QUERY==================================================
+
+------------------------------------------------------
+1. Employees Without Department
+MySQL
+==============
+SELECT e.*
+FROM Employee e
+LEFT JOIN Department d
+ON e.dept_id = d.dept_id
+WHERE d.dept_id IS NULL;
+
+PostgreSQL
+++++++++++++++
+SELECT e.*
+FROM Employee e
+LEFT JOIN Department d
+ON e.dept_id = d.dept_id
+WHERE d.dept_id IS NULL;
+
+✅ Same Query
+
+----------------------------------------------------
+2. Departments Without Employees
+
+MySQL
+=====================
+SELECT d.*
+FROM Department d
+LEFT JOIN Employee e
+ON d.dept_id = e.dept_id
+WHERE e.emp_id IS NULL;
+
+PostgreSQL
+++++++++++++++++++++
+SELECT d.*
+FROM Department d
+LEFT JOIN Employee e
+ON d.dept_id = e.dept_id
+WHERE e.emp_id IS NULL;
+
+✅ Same Query
+
+-----------------------------------------------------
+3. Employee and Manager (Self Join)
+
+MySQL
+=====================
+SELECT e.name AS employee_name,
+       m.name AS manager_name
+FROM Employee e
+LEFT JOIN Employee m
+ON e.manager_id = m.emp_id;
+
+PostgreSQL
+++++++++++++++++++++
+SELECT e.name AS employee_name,
+       m.name AS manager_name
+FROM Employee e
+LEFT JOIN Employee m
+ON e.manager_id = m.emp_id;
+
+✅ Same Query
+
+
+-----------------------------------------------------
+4. Highest Salary in Each Department
+
+MySQL
+========================
+SELECT e.*
+FROM Employee e
+JOIN (
+      SELECT dept_id,
+             MAX(salary) max_salary
+      FROM Employee
+      GROUP BY dept_id
+     ) x
+ON e.dept_id = x.dept_id
+AND e.salary = x.max_salary;
+
+PostgreSQL
+++++++++++++++++++++++
+SELECT e.*
+FROM Employee e
+JOIN (
+      SELECT dept_id,
+             MAX(salary) max_salary
+      FROM Employee
+      GROUP BY dept_id
+     ) x
+ON e.dept_id = x.dept_id
+AND e.salary = x.max_salary;
+
+✅ Same Query
+
+
+------------------------------------------------------
+5. Employees Earning More Than Manager
+
+MySQL
+===============================
+SELECT e.name,
+       e.salary,
+       m.name,
+       m.salary
+FROM Employee e
+JOIN Employee m
+ON e.manager_id = m.emp_id
+WHERE e.salary > m.salary;
+
+PostgreSQL
++++++++++++++++++++++++++++++++
+SELECT e.name,
+       e.salary,
+       m.name,
+       m.salary
+FROM Employee e
+JOIN Employee m
+ON e.manager_id = m.emp_id
+WHERE e.salary > m.salary;
+
+✅ Same Query
+
+-------------------------------------------------------
+6. Customer Who Never Ordered
+
+MySQL
+===============================
+SELECT c.*
+FROM Customers c
+LEFT JOIN Orders o
+ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;
+
+PostgreSQL
+++++++++++++++++++++++++++++++
+SELECT c.*
+FROM Customers c
+LEFT JOIN Orders o
+ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;
+
+✅ Same Query
+
+=======================================================================================================================================
+Frequently Asked Difference Question
+=======================================================================================================================================
+
+--------------------------------------------------------------
+Fetch Today's Records
+
+MySQL
+==============================
+SELECT *
+FROM customer
+WHERE DATE(assigned_date) = CURDATE();
+
+
+PostgreSQL
+++++++++++++++++++++++++++++
+SELECT *
+FROM customer
+WHERE assigned_date::DATE = CURRENT_DATE;
+Current Timestamp
+MySQL
+SELECT NOW();
+PostgreSQL
+SELECT NOW();
+
+✅ Same
+
+--------------------------------------------------------------
+Pagination
+
+MySQL
+===========================
+SELECT *
+FROM Employee
+LIMIT 10 OFFSET 20;
+
+PostgreSQL
++++++++++++++++++++++++++++
+SELECT *
+FROM Employee
+LIMIT 10 OFFSET 20;
+
+✅ Same
+
+----------------------------------------------------------------
+
+Multiple Table Join (3 Tables)
+Tables
+Employee
+---------
+emp_id
+name
+dept_id
+
+Department
+----------
+dept_id
+dept_name
+
+Project
+-------
+project_id
+project_name
+dept_id
+
+
+Q.? Get Employee, Department and Project Details
+
+MySQL
+===============================
+SELECT e.name,
+       d.dept_name,
+       p.project_name
+FROM Employee e
+JOIN Department d
+ON e.dept_id = d.dept_id
+JOIN Project p
+ON d.dept_id = p.dept_id;
+
+PostgreSQL
++++++++++++++++++++++++++++++++
+
+SELECT e.name,
+       d.dept_name,
+       p.project_name
+FROM Employee e
+JOIN Department d
+ON e.dept_id = d.dept_id
+JOIN Project p
+ON d.dept_id = p.dept_id;
+
+
+
+======================================QUESTIONS ON DATE============================================================================================================
+
+
++-------------------+-----------------------------------------+--------------------------------------+
+| Requirement       | MySQL                                   | PostgreSQL                           |
++-------------------+-----------------------------------------+--------------------------------------+
+| Current Date      | CURDATE()                               | CURRENT_DATE                         |
+| Current Timestamp | NOW()                                   | NOW()                                |
+| Current Time      | CURTIME()                               | CURRENT_TIME                         |
+| Yesterday         | CURDATE() - INTERVAL 1 DAY              | CURRENT_DATE - INTERVAL '1 day'      |
+| Tomorrow          | CURDATE() + INTERVAL 1 DAY              | CURRENT_DATE + INTERVAL '1 day'      |
+| Add 7 Days        | DATE_ADD(CURDATE(), INTERVAL 7 DAY)     | CURRENT_DATE + INTERVAL '7 day'      |
+| Subtract 1 Month  | DATE_SUB(CURDATE(), INTERVAL 1 MONTH)   | CURRENT_DATE - INTERVAL '1 month'    |
+| Extract Year      | YEAR(date)                              | EXTRACT(YEAR FROM date)              |
+| Extract Month     | MONTH(date)                             | EXTRACT(MONTH FROM date)             |
+| Extract Day       | DAY(date)                               | EXTRACT(DAY FROM date)               |
++-------------------+-----------------------------------------+--------------------------------------+

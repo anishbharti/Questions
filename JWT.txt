@@ -1,0 +1,279 @@
+
+================================JWT Token Generation, Validation ======================================================================================
+
+
+
+Complete Flow
+------------------------------------------------------
+1. User Login Request
+        |
+        v
+2. Spring Security AuthenticationManager
+        |
+        v
+3. UserDetailsService loads user from DB
+        |
+        v
+4. Password verification
+        |
+        v
+5. JWT Token Generated
+        |
+        v
+6. Token returned to client
+        |
+        v
+7. Client sends token in Authorization Header
+        |
+        v
+8. JwtAuthenticationFilter intercepts request
+        |
+        v
+9. Validate Token
+        |
+        v
+10. User authenticated
+        |
+        v
+11. Controller executes
+
+---------------------------------------------------------
+Step 1: User Login
+POST /login
+
+{
+  "username":"anish",
+  "password":"1234"
+}
+
+----------------------------------------------------------
+Controller:
+
+@PostMapping("/login")
+public String login(@RequestBody LoginRequest request) {
+
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            request.getUsername(),
+            request.getPassword()
+        )
+    );
+
+    return jwtService.generateToken(request.getUsername());
+}
+
+---------------------------------------------------------------------
+Step 2: JWT Generation
+
+
+After successful authentication:
+
+
+@Service
+
+public String generateToken(String username) {
+
+    return Jwts.builder()
+            .setSubject(username)
+            .claim("role", "USER")
+            .setIssuedAt(new Date())
+            .setExpiration(
+                new Date(System.currentTimeMillis() + 86400000)
+            )
+            .signWith(getSigningKey())
+            .compact();
+}
+
+Generated token looks like:
+
+eyJhbGciOiJIUzI1NiJ9
+.
+eyJzdWIiOiJhbmlzaCIsInJvbGUiOiJVU0VSIn0
+.
+A1B2C3D4E5...
+
+Contains:
+
+Header
+Payload
+Signature
+
+--------------------------------------------------------------
+Step 3: Client Sends Token
+GET /products
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+
+---------------------------------------------------------------
+Step 4: Security Filter Executes
+
+This is where JwtAuthenticationFilter comes in.
+
+public class JwtAuthenticationFilter
+        extends OncePerRequestFilter {
+
+Every request passes through this filter before reaching the controller.
+
+What does filter do?
+String authHeader =
+request.getHeader("Authorization");
+
+Reads:
+
+Bearer eyJhbGciOiJIUzI1NiJ9...
+
+Extract token:
+
+String jwt = authHeader.substring(7);
+
+Extract username:
+
+String username =
+jwtService.extractUsername(jwt);
+
+Validate:
+
+jwtService.validateToken(jwt);
+
+
+-----------------------------------------------------------------------
+Step 5: Set Authentication in Security Context
+
+If token is valid:
+
+UsernamePasswordAuthenticationToken auth =
+new UsernamePasswordAuthenticationToken(
+        userDetails,
+        null,
+        userDetails.getAuthorities()
+);
+
+SecurityContextHolder
+        .getContext()
+        .setAuthentication(auth);
+
+Now Spring Security knows:
+
+Current User = anish
+Role = USER
+
+Request is allowed to proceed.
+
+
+---------------------------------------------------------------
+Step 6: Security Configuration
+
+Filter is registered here:
+
+@Bean
+public SecurityFilterChain securityFilterChain(
+        HttpSecurity http) throws Exception {
+
+    return http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/login")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            )
+            .addFilterBefore(
+                    jwtAuthenticationFilter,
+                    UsernamePasswordAuthenticationFilter.class
+            )
+            .build();
+}
+Why addFilterBefore?
+
+Because JWT must be validated before Spring Security tries to authorize the request.
+
+Interview Answer (2 Minutes)
+
+"When a user logs in, Spring Security's AuthenticationManager validates the username and password using UserDetailsService. After successful authentication, I generate a JWT token containing user information such as username and roles. The token is signed using a secret key and returned to the client. For subsequent requests, the client sends the token in the Authorization header. A custom JwtAuthenticationFilter extending OncePerRequestFilter intercepts every request, extracts and validates the token, loads user details, and sets authentication in SecurityContextHolder. The filter is registered in SecurityFilterChain using addFilterBefore(), allowing Spring Security to authenticate users without maintaining server-side sessions."
+
+
+Q: Why extend OncePerRequestFilter instead of implementing Filter?
+
+A: Because OncePerRequestFilter guarantees that the filter runs only once per request and provides a convenient doFilterInternal() method, making JWT filter implementation easie
+=======================================================================================================================================================================
+------------------------------ AUTHENTICATION MANAGER---------------------------------------------------------------
+
+Interview Answer
+
+"AuthenticationManager is an interface provided by Spring Security that is responsible for authenticating users. The actual implementation is usually ProviderManager. UsernamePasswordAuthenticationToken is a concrete class implementing Authentication. It holds the username and password submitted during login. When we pass this token to authenticationManager.authenticate(), Spring Security validates the credentials using UserDetailsService and PasswordEncoder, and returns an authenticated Authentication object if the credentials are valid."
+
+
+=====================================================================================================================================================================
+
++--------------------------------------+-----------+
+| Component                            | Type      |
++--------------------------------------+-----------+
+| AuthenticationManager                | Interface |
+| Authentication                       | Interface |
+| UserDetailsService                   | Interface |
+| PasswordEncoder                      | Interface |
+| UsernamePasswordAuthenticationToken  | Class     |
+| ProviderManager                      | Class     |
+| BCryptPasswordEncoder                | Class     |
+| Abstract Class                       | Abstract  |
++--------------------------------------+-----------+
+
+
+
+====================================================================================================================================================================
+
+
+   ----------------------------------------------PRACTICE QUESTIONS-----------------------------------------------------------------------------------
+
+
+
+1. Why is JWT called Stateless Authentication?
+Interview Answer
+
+JWT is called stateless authentication because the server does not maintain any session information for authenticated users. After successful login, the server generates a signed JWT containing user information and roles. The client stores the token and sends it with every request in the Authorization header. The server validates the token signature and expiration date without looking up any session data in memory or a database. This improves scalability because multiple application instances can independently validate the token, making JWT well suited for microservices and distributed architectures.
+
+2. What are the three parts of a JWT?
+Interview Answer
+
+A JWT consists of three parts separated by dots: Header, Payload, and Signature. The Header contains metadata such as the signing algorithm. The Payload contains claims like username, user ID, roles, and expiration time. The Signature is generated using the header, payload, and a secret key or private key. The signature ensures that the token has not been modified by a client. When a request arrives, the server recalculates the signature and compares it with the token signature. If they do not match, the token is considered invalid and access is denied.
+
+3. What information should never be stored in JWT?
+Interview Answer
+
+Sensitive information such as passwords, credit card details, API secrets, personal identification numbers, or confidential business data should never be stored inside a JWT. Although the token is digitally signed, it is not encrypted by default and can be decoded by anyone who possesses it. Therefore, JWT payloads should contain only the minimum information required for authentication and authorization, such as user ID, username, and roles. Storing sensitive information in JWT creates security risks because the payload is visible to clients and intermediate systems.
+
+4. How do you invalidate a JWT before expiration?
+Interview Answer
+
+JWT is stateless, so once a token is issued, it remains valid until it expires. To invalidate a token before expiration, several approaches can be used. One common solution is maintaining a token blacklist in Redis and checking it during authentication. Another approach is using short-lived access tokens combined with refresh tokens. When a user logs out, the refresh token can be revoked. In enterprise systems, token versioning or database-backed token revocation mechanisms are often used to immediately invalidate previously issued tokens while preserving scalability.
+
+5. What is the difference between Access Token and Refresh Token?
+Interview Answer
+
+An access token is a short-lived JWT used to access protected resources, while a refresh token is a long-lived credential used to obtain new access tokens without requiring the user to log in again. Typically, access tokens expire within minutes, reducing the impact of token theft. When the access token expires, the client sends the refresh token to a dedicated endpoint. After validating the refresh token, the server issues a new access token. This approach improves security while maintaining a good user experience because users are not frequently required to reauthenticate.
+
+6. How do you implement JWT Authentication in Spring Security?
+Interview Answer
+
+In Spring Security, JWT authentication is implemented using AuthenticationManager, UserDetailsService, a JWT utility class, a custom JwtAuthenticationFilter, and SecurityFilterChain. During login, AuthenticationManager validates user credentials. After successful authentication, a JWT token is generated and returned to the client. For subsequent requests, a custom filter extending OncePerRequestFilter extracts the token from the Authorization header, validates its signature and expiration, loads user details, and sets authentication in SecurityContextHolder. The filter is registered using SecurityFilterChain, enabling stateless authentication without maintaining HTTP sessions.
+
+7. Why is JWT suitable for Microservices?
+Interview Answer
+
+JWT is highly suitable for microservices because it eliminates the need for centralized session storage. Once a token is issued by an authentication service, every microservice can independently validate the token using the shared secret key or public key. This reduces dependency on a central session store and improves scalability. JWT also carries user identity and authorization information within the token itself, allowing downstream services to make authorization decisions without additional database lookups. This makes JWT an efficient authentication mechanism in distributed and cloud-native architectures.
+
+8. What security risks exist with JWT?
+Interview Answer
+
+JWT implementations can be vulnerable if security best practices are not followed. Risks include token theft, weak signing secrets, storing sensitive information in payloads, long token expiration times, and insecure storage on the client side. To mitigate these risks, access tokens should be short-lived, HTTPS should always be enforced, strong signing algorithms such as RS256 or HS256 should be used, refresh tokens should be securely managed, and sensitive information should never be included in the payload. Additional protections such as token rotation and revocation can further improve security.
+
+9. Why use OncePerRequestFilter in JWT?
+Interview Answer
+
+OncePerRequestFilter is commonly used in JWT authentication because it guarantees that the filter executes only once for a single HTTP request. The filter intercepts incoming requests, extracts the JWT token from the Authorization header, validates the token, and establishes the authenticated user in SecurityContextHolder. By executing before controller methods are invoked, the filter ensures that authorization decisions are made using authenticated user information. Using OncePerRequestFilter simplifies implementation and avoids multiple executions of the same authentication logic during request processing.
+
+10. What is the difference between Session Authentication and JWT Authentication?
+Interview Answer
+
+Session authentication is stateful because the server maintains session information for each logged-in user, typically in memory or a session store. The client sends a session ID with each request, and the server retrieves the corresponding session data. JWT authentication is stateless because all required authentication information is stored inside the token itself. The server validates the token without storing session data. Session-based authentication is simpler for traditional applications, while JWT is preferred for REST APIs, microservices, and distributed systems because it improves scalability and reduces server-side state management.

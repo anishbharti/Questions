@@ -1,0 +1,375 @@
+❓ Scenario 1: High Traffic Spike (Black Friday / Policy Sale)
+
+👉 Question:
+Your system suddenly gets 10x traffic. How do you handle it?
+
+✅ Strong Answer:
+
+In my project, I handle traffic spikes using a combination of load balancing, auto-scaling, and asynchronous processing.
+
+I use Amazon EC2 Auto Scaling to dynamically increase instances.
+A load balancer distributes traffic across instances.
+For heavy operations like payment or notifications, I use Amazon SQS to buffer requests.
+Additionally, I use Apache Kafka for event-driven processing so services don’t get overloaded.
+
+👉 This ensures:
+✔ No downtime
+✔ Smooth handling of spikes
+
+❓ Scenario 2: Downstream Service Failure
+
+👉 Payment service is down. What happens?
+
+✅ Strong Answer:
+
+I use circuit breaker, retry, and message queueing to handle this.
+
+Circuit breaker (Resilience4j) stops repeated calls
+Failed requests are pushed to Kafka/SQS
+Once service is back, messages are reprocessed
+
+👉 Example:
+
+Policy created → Payment failed → stored in Kafka → retry later
+
+✔ No data loss
+✔ System remains stable
+
+❓ Scenario 3: Guarantee No Data Loss
+
+👉 How do you ensure messages are never lost?
+
+✅ Strong Answer:
+
+I ensure reliability at multiple layers:
+
+Kafka replication + acks=all
+SQS durability (managed by AWS)
+Idempotent consumers
+Retry mechanism
+
+👉 Even if consumer crashes:
+
+Message remains in queue
+Processed later
+❓ Scenario 4: Real-Time Notification System
+
+👉 How do you design it?
+
+✅ Strong Answer:
+
+I use **Amazon SNS + SQS fan-out pattern.
+
+
+
+
+
+🚀 Scenario 1: Kafka Broker Crash + In-Flight Messages
+❓ Situation
+
+A Kafka broker crashes while producers are sending policy_created events.
+
+✅ What really happens?
+Kafka stores data in replicated partitions
+One broker is leader, others are followers
+
+👉 If leader crashes:
+
+A follower becomes new leader automatically
+No data loss if replication is configured correctly
+✅ Strong Answer
+
+In our system, we configure Kafka with replication and set producer acknowledgment to acks=all. This ensures that a message is only considered successful when it is written to all replicas. If a broker crashes, another replica becomes leader and continues serving requests without data loss.
+
+⚠️ Failure Risk
+If acks=1 → possible data loss
+If replication factor = 1 → high risk
+🚀 Scenario 2: Consumer Crashes After Processing but Before Commit
+❓ Situation
+
+Payment Service processes payment but crashes before committing offset.
+
+🔥 What happens?
+Kafka thinks message is not processed
+Message will be reprocessed
+
+👉 Result: Duplicate processing
+
+✅ Strong Answer
+
+This leads to duplicate message processing because Kafka uses at-least-once delivery. To handle this, we implement idempotency using unique transaction IDs and database checks to ensure the same payment is not processed twice.
+
+✔ Solution
+Idempotent consumer
+Unique transaction ID
+DB constraint
+🚀 Scenario 3: Kafka is Completely Down
+❓ Situation
+
+Kafka cluster is unavailable.
+
+🔥 Impact
+Policy Service → Kafka ❌
+Payment Service ← Kafka ❌
+Events stop flowing
+Async communication breaks
+✅ Strong Answer
+
+If Kafka is down, producers cannot publish events and consumers cannot consume them, so the event-driven flow is temporarily disrupted. To handle this, we implement fallback mechanisms such as storing events in a database or using SQS as a backup queue. We also use retries and circuit breakers to ensure the system degrades gracefully until Kafka is restored.
+
+✔ Advanced Design
+Use Amazon SQS as fallback
+Store events temporarily in DB
+Replay later
+🚀 Scenario 4: SQS Message Not Deleted (Visibility Timeout Issue)
+❓ Situation
+
+Lambda processes message but fails to delete it.
+
+🔥 What happens?
+Message becomes visible again
+Another consumer processes it
+
+👉 Duplicate execution
+
+✅ Strong Answer
+
+In SQS, if a message is not deleted within the visibility timeout, it becomes visible again and can be reprocessed. To handle this, we design idempotent consumers and use proper visibility timeout settings to ensure the processing completes before the message becomes visible again.
+
+✔ Best Practices
+Increase visibility timeout
+Use idempotency
+🚀 Scenario 5: Lambda Fails During Processing
+❓ Situation
+
+Lambda triggered by SQS fails midway.
+
+🔥 What happens?
+Message goes back to queue
+Retry happens
+✅ Strong Answer
+
+Lambda automatically retries processing SQS messages if it fails. After a configured number of retries, the message is sent to a Dead Letter Queue (DLQ) for further analysis. This ensures no message is lost and failed messages can be handled separately.
+
+✔ Design
+SQS → Lambda → Fail → Retry → DLQ
+🚀 Scenario 6: Ordering Problem in Kafka
+❓ Situation
+
+Payment events processed out of order.
+
+🔥 Why?
+Multiple partitions
+No key used
+✅ Strong Answer
+
+Kafka guarantees ordering only within a partition. To maintain order for related events like a specific policy, we use a key such as policyId so that all related messages go to the same partition and maintain order.
+
+🚀 Scenario 7: Sudden Traffic Spike (System Overload)
+❓ Situation
+
+Mass policy purchase event.
+
+🔥 Risk
+Services overloaded
+DB crashes
+✅ Strong Answer
+
+To handle traffic spikes, we use Kafka and SQS as buffering layers to absorb sudden load. EC2 instances are auto-scaled, and Lambda scales automatically. This ensures the system can handle spikes without dropping requests.
+
+🚀 Scenario 8: Duplicate Messages Across Kafka + SQS
+❓ Situation
+
+Same message processed multiple times across systems.
+
+✅ Strong Answer
+
+Since both Kafka and SQS provide at-least-once delivery, duplicates are possible. We handle this using idempotent design, where each message has a unique ID and we check against the database before processing to ensure it is not executed multiple times.
+
+🚀 Scenario 9: Partial Failure in Saga
+❓ Situation
+
+Policy created but payment fails.
+
+✅ Strong Answer
+
+We use Saga pattern with compensating transactions. If payment fails after policy creation, we trigger a compensation action to cancel or mark the policy as failed, ensuring data consistency across services.
+
+🚀 Scenario 10: Network Partition (Split Brain)
+❓ Situation
+
+Cluster nodes lose communication.
+
+🔥 Risk
+Multiple leaders
+Data inconsistency
+✅ Strong Answer
+
+Kafka uses leader election and in-sync replicas to avoid split-brain scenarios. Only one leader is active for a partition, and writes are accepted only by the leader, ensuring consistency.
+
+🔥 FINAL MASTER ANSWER (Use This Anywhere)
+
+In our system, we designed Kafka and AWS-based architecture to handle failures using replication, acknowledgments, idempotent consumers, retries, and fallback mechanisms like SQS and DLQ. We ensured no data loss by configuring Kafka with acks=all and replication, handled duplicates using idempotency, and managed failures using circuit breakers and Saga pattern. This makes the system highly resilient, scalable, and fault-tolerant.
+
+
+
+
+
+
+
+================================================================================================================================================================
+
+
+🎯 🔥 PART 1: MOCK INTERVIEW (Round 1 – Coding + Core Java)
+❓ Q1:
+
+You have a list of integers.
+👉 Find the first non-repeating element using Java 8 Streams
+
+(Answer before scrolling)
+
+<details> <summary>✅ Expected Answer</summary>
+List<Integer> list = Arrays.asList(1,2,3,2,1,4);
+
+Optional<Integer> result =
+    list.stream()
+        .collect(Collectors.groupingBy(
+            Function.identity(),
+            LinkedHashMap::new,
+            Collectors.counting()
+        ))
+        .entrySet()
+        .stream()
+        .filter(e -> e.getValue() == 1)
+        .map(Map.Entry::getKey)
+        .findFirst();
+</details>
+❓ Q2:
+
+👉 Difference between HashMap and ConcurrentHashMap?
+
+(Answer first)
+
+<details> <summary>✅ Expected Answer</summary>
+HashMap is not thread-safe
+ConcurrentHashMap is thread-safe
+Uses segment locking / CAS instead of full locking
+Better performance in multi-threading
+</details>
+🚀 🔥 PART 2: SYSTEM DESIGN (Very Important)
+❓ Q3: Design a URL Shortener (like Bitly)
+
+👉 What interviewer expects:
+
+✅ Components:
+API Gateway
+URL Service
+Database (NoSQL preferred)
+Cache (Redis)
+Hashing (Base62)
+💡 Your Answer Should Be:
+
+👉
+“I would design using a REST API where a long URL is converted into a short code using Base62 encoding. The mapping is stored in a database like Redis or Cassandra for fast access. When a user hits the short URL, the service retrieves the original URL and redirects. I would also use caching to improve performance and handle high traffic using load balancers.”
+
+❓ Q4: Design a Payment System (High Level)
+
+👉 Expected points:
+
+Idempotency
+Retry mechanism
+Kafka for async processing
+DB consistency
+⚠️ 🔥 PART 3: TRICKY CROSS QUESTIONS
+
+These are game changers in interviews
+
+❓ Q5:
+
+👉 Why is String immutable in Java?
+
+✔ Expected:
+
+Security (used in keys, URLs)
+Thread-safe
+Caching (String pool)
+❓ Q6:
+
+👉 Can we override static methods?
+
+✔ Answer:
+❌ No (only method hiding, not overriding)
+
+❓ Q7:
+
+👉 What happens if hashCode() is same but equals() is false?
+
+✔ Answer:
+👉 Collision → stored in same bucket → handled via linked list/tree
+
+❓ Q8:
+
+👉 Difference between fail-fast and fail-safe?
+
+✔ Answer:
+
+Fail-fast → throws exception (e.g., ArrayList)
+Fail-safe → works on copy (e.g., ConcurrentHashMap)
+❓ Q9:
+
+👉 Why Kafka is better than REST in microservices?
+
+✔ Answer:
+
+Async communication
+Loose coupling
+High throughput
+Fault tolerance
+❓ Q10:
+
+👉 What is eventual consistency?
+
+✔ Answer:
+👉 Data becomes consistent over time (used in distributed systems)
+
+🧠 🔥 PART 4: REAL SCENARIO QUESTION
+❓ Q11:
+
+👉 Your API suddenly becomes slow in production. What will you do?
+
+✔ Expected Answer Flow:
+
+Check logs
+Monitor metrics (CPU, memory)
+Check DB queries
+Analyze external API calls
+Add caching / optimize queries
+🎯 FINAL ROUND (Behavioral + Tech Mix)
+❓ Q12:
+
+👉 Tell me a challenging bug you fixed
+
+✔ Structure (VERY IMPORTANT):
+
+Problem
+Action
+Result
+
+👉 Example:
+“We had high latency due to DB query… I optimized indexing… reduced response time by 80%”
+
+🚀 BONUS: INTERVIEWER TRAP QUESTION
+❓ Q13:
+
+👉 You used Kafka. Why not RabbitMQ?
+
+✔ Smart Answer:
+“Kafka is better for high-throughput event streaming and log-based systems, while RabbitMQ is better for complex routing. Our use case required scalability and durability, so we chose Kafka.”
+
+⭐ FINAL ADVICE (CRITICAL)
+
+In interview:
+
+Don’t say “I don’t know” → say “I haven’t worked deeply but here’s my understanding”
+Always give real examples
+Mention tools (Kafka, Redis, Kubernetes)

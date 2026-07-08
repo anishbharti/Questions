@@ -1,0 +1,348 @@
+1. Git Setup Commands
+git version
+
+Checks whether Git is installed and shows the installed version.
+
+git version
+
+Example Output:
+
+git version 2.45.1
+git config --global user.name "Name"
+
+Sets your username globally for all repositories.
+
+git config --global user.name "Anish"
+
+Git uses this name in commits.
+
+git config --global user.email "mail"
+
+Sets your email globally.
+
+git config --global user.email "anish@gmail.com"
+
+Usually should match your GitHub email.
+
+git config --global color.ui true
+
+Enables colorful terminal output for better readability.
+
+git config --global color.ui true
+git config --list
+
+Displays all Git configurations.
+
+git config --list
+2. Repository Creation Commands
+git init
+
+Creates a new local Git repository.
+
+git init
+
+This creates a hidden .git folder.
+
+git clone <url>
+
+Downloads an existing remote repository.
+
+git clone https://github.com/user/project.git
+3. Git Workflow Commands
+
+The normal workflow is:
+
+Modify Code → Add → Commit → Push
+git status
+
+Shows:
+
+modified files
+staged files
+untracked files
+git status
+
+Very important command.
+
+git add <file>
+
+Adds a specific file to staging area.
+
+git add App.java
+git add .
+
+Adds all changed files.
+
+git add .
+git add -p
+
+Interactive staging.
+
+Allows staging specific parts of a file.
+
+git add -p
+git rm <file>
+
+Deletes file from local system and Git tracking.
+
+git rm test.txt
+git rm --cached <file>
+
+Removes file from Git tracking only.
+
+File still exists locally.
+
+git rm --cached application.properties
+
+Used when adding files to .gitignore.
+
+4. Commit Commands
+git commit -m "message"
+
+Creates a commit with message.
+
+git commit -m "Added login feature"
+git commit -am "message"
+
+Shortcut for:
+
+git add .
+git commit -m "message"
+
+Works only for already tracked files.
+
+git commit -am "Bug fixed"
+git commit --amend
+
+Modifies last commit.
+
+Used for:
+
+changing commit message
+adding forgotten files
+git commit --amend
+5. Branch Commands
+git branch
+
+Shows all branches.
+
+git branch
+
+Current branch has *.
+
+git branch <name>
+
+Creates new branch.
+
+git branch feature-login
+git checkout <name>
+
+Switches branch.
+
+git checkout develop
+git switch <name>
+
+Modern alternative to checkout.
+
+git switch develop
+git checkout -b <name>
+
+Creates and switches branch together.
+
+git checkout -b payment-feature
+git branch -d <name>
+
+Deletes branch safely.
+
+git branch -d feature1
+
+Prevents deletion if not merged.
+
+git branch -D <name>
+
+Force deletes branch.
+
+git branch -D feature1
+6. Merge & Rebase
+git merge <branch>
+
+Merges another branch into current branch.
+
+git merge feature-login
+git merge --abort
+
+Cancels merge if conflicts occur.
+
+git merge --abort
+git rebase <branch>
+
+Moves current branch commits on top of another branch.
+
+git rebase main
+
+Creates cleaner linear history.
+
+7. Remote Repository Commands
+git remote -v
+
+Shows connected remote repositories.
+
+git remote -v
+git remote add origin <url>
+
+Connects local repo to remote repo.
+
+git remote add origin https://github.com/user/project.git
+git remote remove <name>
+
+Removes remote connection.
+
+git remote remove origin
+git fetch
+
+Downloads latest remote changes without merging.
+
+git fetch
+git pull
+
+Fetch + Merge together.
+
+git pull origin main
+
+Updates local code.
+
+git push -u origin <branch>
+
+Pushes code to remote branch.
+
+git push -u origin main
+
+-u sets upstream tracking.
+
+git push --tags
+
+Pushes tags to remote.
+
+git push --tags
+git push --force
+
+Forcefully overwrites remote history.
+
+git push --force
+
+Dangerous command.
+
+8. History & Comparison Commands
+git log
+
+Shows commit history.
+
+git log
+git log --oneline
+
+Compact history.
+
+git log --oneline
+git log --graph
+
+Shows branch graph visually.
+
+git log --graph
+git diff
+
+Shows unstaged changes.
+
+git diff
+git diff --staged
+
+Shows staged changes.
+
+git diff --staged
+git blame <file>
+
+Shows who changed each line.
+
+git blame App.java
+git show <commit-id>
+
+Shows commit details.
+
+git show a1b2c3
+9. Undo Commands
+git reset --soft HEAD~1
+
+Removes last commit but keeps staged changes.
+
+git reset --soft HEAD~1
+git reset HEAD~1
+
+Removes commit and unstages changes.
+
+git reset HEAD~1
+git reset --hard HEAD~1
+
+Deletes commit and changes permanently.
+
+git reset --hard HEAD~1
+
+Dangerous command.
+
+git restore <file>
+
+Discards local changes.
+
+git restore App.java
+git revert <commit-id>
+
+Creates opposite commit safely.
+
+git revert a1b2c3
+
+Used in shared/public branches.
+
+Interview Summary
+
+“Git commands are mainly divided into repository creation, staging, committing, branching, merging, remote synchronization, history tracking, and undo operations. Commands like git add, git commit, git push, git pull, git branch, and git merge are used daily in development to manage source code versions and collaborate with teams efficiently.”
+
+
+
+
+
+
+==========================================================================================================================
+
+A merge conflict occurs in Git when two branches modify the same lines of code or the same file, and Git is unable to decide which changes should be kept during merge or rebase operations.
+
+To handle a merge conflict, first I identify the conflicted files using:
+
+git status
+
+Git marks the files with conflict indicators like:
+
+<<<<<<< HEAD
+Current branch code
+=======
+Incoming branch code
+>>>>>>> feature-branch
+
+I manually review the conflicting code, discuss with team members if required, and decide whether to keep current changes, incoming changes, or combine both logically. After resolving the conflict, I remove the conflict markers and test the application to ensure functionality is not broken.
+
+Then I stage the resolved files:
+
+git add <file-name>
+
+If it is a merge operation, I complete it using:
+
+git commit
+
+If it is a rebase conflict, I continue using:
+
+git rebase --continue
+
+If the merge becomes problematic, I can cancel it using:
+
+git merge --abort
+
+Interview answer:
+
+“Whenever a merge conflict occurs, I first identify the conflicted files using git status, manually resolve the conflicting code by reviewing both changes, test the application, and then add and commit the resolved files. If needed, I coordinate with team members to ensure the correct logic is preserved before completing the merge.”

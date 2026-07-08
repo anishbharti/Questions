@@ -1,0 +1,364 @@
+==========================================JUNIT Testing=======================================================
+
+-----------------------------------------------------------------------------
+1. What is Unit Testing?
+Answer
+
+Unit Testing is the process of testing an individual class or method in isolation from its dependencies. In Spring Boot, we commonly use JUnit 5 and Mockito for unit testing.
+
+For example, while testing UserService, I mock the UserRepository so that no real database interaction occurs.
+
+Benefits:
+
+Fast execution
+Easy bug identification
+No dependency on external systems
+Improves code quality
+
+------------------------------------------------------------------------------
+2. What is Mockito?
+Answer
+
+Mockito is a mocking framework used with JUnit.
+
+It helps create fake implementations of dependencies so that we can test a class in isolation.
+
+Example:
+
+@Mock
+private UserRepository repository;
+
+Here Mockito creates a fake repository object.
+
+------------------------------------------------------------------------------
+
+3. What is the purpose of when()?
+Answer
+
+when() is used for stubbing mock behavior.
+
+Example:
+
+when(repository.findById(1))
+       .thenReturn(Optional.of(user));
+
+This means:
+
+Whenever findById(1) is called on the mock repository, return the specified user.
+
+Mockito internally stores this rule and matches method calls against it during execution.
+
+
+--------------------------------------------------------------------------------
+4. What is the difference between when() and verify()?
+Answer
+
+when() defines mock behavior.
+
+when(repository.findById(1))
+        .thenReturn(user);
+
+verify() checks interactions.
+
+verify(repository).findById(1);
+
+In simple terms:
+
+when()  -> What should happen?
+verify() -> Did it happen?
+
+---------------------------------------------------------------------------------
+5. What does verify(repository, never()) mean?
+Answer
+
+It verifies that a specific method was never called on the mock object.
+
+Example:
+
+verify(repository, never())
+       .deleteById(anyInt());
+
+This checks that deleteById() was not invoked on the mocked repository.
+
+Mockito verifies interactions only on the mock object, not on the real repository.
+
+
+----------------------------------------------------------------------------------
+6. What is @Mock?
+Answer
+
+@Mock creates a Mockito mock object.
+
+Example:
+
+@Mock
+private UserRepository repository;
+
+The repository becomes a fake implementation.
+
+It is commonly used in service layer unit testing.
+
+
+
+----------------------------------------------------------------------------------
+7. What is @InjectMocks?
+Answer
+
+@InjectMocks creates the class under test and injects all mock dependencies automatically.
+
+Example:
+
+@Mock
+private UserRepository repository;
+
+@InjectMocks
+private UserService service;
+
+Mockito creates:
+
+new UserService(repository);
+
+and injects the mock repository.
+
+
+-----------------------------------------------------------------------------------
+
+8. Difference Between @Mock and @MockBean?
+Answer
+@Mock
+
+Mockito annotation.
+
+Used in unit tests.
+
+@Mock
+private UserRepository repository;
+
+No Spring context is loaded.
+
+@MockBean
+
+Spring Boot annotation.
+
+Used when Spring context is running.
+
+@MockBean
+private UserService service;
+
+It replaces an actual Spring bean with a mock bean.
+
+Commonly used with:
+
+@WebMvcTest
+
+or
+
+@SpringBootTest
+
+
+
+---------------------------------------------------------------------------------------------------
+9. What is MockMvc?
+Answer
+
+MockMvc is a Spring testing utility used to simulate HTTP requests without starting a real server.
+
+Example:
+
+mockMvc.perform(get("/users/1"))
+       .andExpect(status().isOk());
+
+It allows testing controller endpoints efficiently.
+
+
+---------------------------------------------------------------------------------------------------
+10. Why use MockMvc?
+Answer
+
+Benefits:
+
+No Tomcat startup required
+Fast execution
+Tests HTTP request-response behavior
+Verifies status codes and response bodies
+
+Example:
+
+mockMvc.perform(get("/users/1"))
+
+simulates:
+
+GET /users/1
+
+
+-----------------------------------------------------------------------------------------------
+11. What is @WebMvcTest?
+Answer
+
+@WebMvcTest loads only the web layer.
+
+Example:
+
+@WebMvcTest(UserController.class)
+
+Loads:
+
+Controller
+Spring MVC Components
+MockMvc
+
+Does not load:
+
+Service
+Repository
+Database
+
+Dependencies are usually mocked using @MockBean.
+
+
+-------------------------------------------------------------------------------------------------
+12. What is @SpringBootTest?
+Answer
+
+@SpringBootTest loads the complete Spring application context.
+
+Example:
+
+@SpringBootTest
+
+Loads:
+
+Controller
+Service
+Repository
+Configuration
+Database Connections
+
+Used for integration testing.
+
+-------------------------------------------------------------------------------------------------
+
+13. Difference Between @WebMvcTest and @SpringBootTest?
+Answer
+Feature	@WebMvcTest	@SpringBootTest
+Loads Controller	Yes	Yes
+Loads Service	No	Yes
+Loads Repository	No	Yes
+Loads Full Context	No	Yes
+Faster	Yes	No
+Used For	Controller Testing	Integration Testing
+
+
+
+--------------------------------------------------------------------------------------------------
+14. What is Integration Testing?
+Answer
+
+Integration Testing verifies that multiple layers work together correctly.
+
+Example Flow:
+
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Database
+
+Unlike unit testing, mocks are usually avoided.
+
+The objective is to validate the complete application flow.
+
+
+-----------------------------------------------------------------------------------------------------
+15. Difference Between Unit Testing and Integration Testing?
+Answer
+Unit Test	Integration Test
+Tests one component	Tests multiple components
+Uses mocks	Uses real beans
+Fast	Slower
+No DB required	Usually DB required
+Isolated testing	End-to-end flow testing
+
+
+-------------------------------------------------------------------------------------------------------
+16. What is JaCoCo?
+Answer
+
+JaCoCo is a Java Code Coverage tool.
+
+It measures how much application code is executed during testing.
+
+It provides:
+
+Line Coverage
+Branch Coverage
+Method Coverage
+Class Coverage
+
+
+--------------------------------------------------------------------------------------------------------
+17. How do you check JaCoCo Coverage?
+Answer
+
+Using Maven:
+
+mvn clean test
+
+Report generated:
+
+target/site/jacoco/index.html
+
+In Eclipse/STS, I prefer EclEmma plugin which highlights:
+
+Green  -> Covered
+Yellow -> Partially Covered
+Red    -> Not Covered
+
+directly in source code.
+
+
+
+---------------------------------------------------------------------------------------------------------
+18. What is Branch Coverage?
+Answer
+
+Branch coverage ensures all logical paths are tested.
+
+Example:
+
+if(user != null) {
+   return true;
+}
+return false;
+
+To achieve 100% branch coverage:
+
+Test when user exists
+Test when user doesn't exist
+
+Both paths must execute.
+
+
+---------------------------------------------------------------------------------------------------------
+19. Why do we use any() and anyInt()?
+Answer
+
+Argument matchers allow Mockito to accept any value.
+
+Example:
+
+when(repository.save(any(User.class)))
+       .thenReturn(user);
+
+This means:
+
+Return user regardless of which User object is passed.
+
+
+----------------------------------------------------------------------------------------------------------
+20. What is your testing strategy in Spring Boot projects?
+Answer (Strong 3.5 Years Experience Answer)
+
+I usually follow a layered testing approach. For business logic validation, I write JUnit 5 and Mockito-based unit tests using @Mock and @InjectMocks. For controller testing, I use @WebMvcTest with MockMvc and @MockBean to validate request-response behavior. For critical business flows, I write integration tests using @SpringBootTest to verify interactions between Controller, Service, Repository, and Database. I also monitor code coverage using JaCoCo/EclEmma and ensure that important business logic has good line and branch coverage.

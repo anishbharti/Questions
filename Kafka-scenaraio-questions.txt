@@ -1,0 +1,105 @@
+Flow of Your Microservice
+Payment Service
+      |
+      v
+OrderProducer.publishOrder()
+      |
+      v
+KafkaTemplate.send()
+      |
+      v
+Kafka Topic (order-events)
+      |
+      v
+Notification Service Consumer
+      |
+      v
+Email / SMS / WhatsApp
+Interview Answer
+
+“KafkaTemplate is a Spring Kafka helper class used to simplify producing messages to Kafka topics. It abstracts producer creation, connection handling, serialization, and message publishing. In my payment microservice, I used KafkaTemplate to publish OrderEvent objects asynchronously to the order-events topic, which are then consumed by downstream services.”
+
+Counter Questions Interviewers Ask
+Why use Kafka instead of REST between microservices?
+Loose coupling
+Async communication
+Better scalability
+Retry support
+High throughput
+Why event-driven architecture?
+
+Because producer and consumer remain independent.
+
+Why use DTO (OrderEvent)?
+
+To transfer only required data between services.
+
+Is send() synchronous?
+
+No.
+
+kafkaTemplate.send()
+
+returns immediately.
+
+Kafka sends asynchronously.
+
+Can you send key + value?
+
+Yes:
+
+kafkaTemplate.send(TOPIC, "101", event);
+
+Key helps partitioning.
+
+What happens if Kafka broker is down?
+Producer retries
+Exception occurs
+Can configure retries and acknowledgments
+Why use topics?
+
+Topics logically separate message streams.
+
+Example:
+
+payment-events
+order-events
+notification-events
+
+This code is essentially implementing Producer Pattern in Event-Driven Microservices.    
+
+
+======================================================================================================
+
+How Kafka Partition Gets Selected (Brief Interview Answer)
+
+If Key is Provided:
+
+kafkaTemplate.send("order-events", "101", event);
+
+Kafka calculates:
+
+Partition = hash(key) % number_of_partitions
+
+Example:
+
+Key = "101"
+hash(101) % 3 partitions = Partition 1
+
+Why use key?
+
+Same key always goes to same partition
+Maintains message ordering for that key
+Useful for orderId, customerId, userId
+
+If Key is NOT Provided:
+
+kafkaTemplate.send("order-events", event);
+
+Kafka producer chooses partition automatically using its default partitioner.
+
+Usually messages are distributed across partitions to balance load.
+
+Interview Ready Answer
+
+“Partition selection in Kafka depends on whether a key is provided. If a key exists, Kafka uses hash(key) % number_of_partitions to decide the partition so messages with the same key maintain ordering. If no key is provided, Kafka automatically distributes messages across partitions for load balancing.”

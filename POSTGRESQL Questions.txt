@@ -1,0 +1,600 @@
+===========================================POSTGRE QUESTIONS============================================================
+
+-------------------------
+1. What is PostgreSQL?
+Interview Answer
+
+PostgreSQL is an open-source relational database management system known for its reliability, ACID compliance, extensibility, and support for advanced SQL features. It supports transactions, indexing, stored procedures, JSON data types, partitioning, and concurrency control through MVCC. PostgreSQL is widely used in enterprise applications because it provides strong consistency, high performance, and scalability.
+
+-----------------------------------------------
+
+2. What is MVCC?
+Interview Answer
+
+MVCC (Multi-Version Concurrency Control) allows multiple transactions to access the same data simultaneously without blocking each other. Instead of overwriting rows immediately, PostgreSQL creates multiple versions of a row. Readers can access older committed versions while writers update newer versions. This improves concurrency and reduces locking issues.
+
+
+------------------------------------------------------------------------------
+3. What is the difference between DELETE, TRUNCATE, and DROP?
+DELETE	TRUNCATE	DROP
+Removes selected rows	Removes all rows	Removes table
+Can use WHERE	No WHERE	Table deleted
+Slower	Faster	Fastest
+Can rollback	Can rollback	Can rollback
+Interview Answer
+
+DELETE removes specific rows and logs each deletion. TRUNCATE removes all rows quickly by deallocating storage pages. DROP completely removes the table structure and data from the database.
+
+--------------------------------------------------------------------------------
+
+4. What are PostgreSQL Indexes?
+Interview Answer
+
+Indexes improve query performance by allowing PostgreSQL to locate rows without scanning the entire table. The most commonly used index is the B-Tree index. Indexes are beneficial for frequently searched, sorted, or joined columns, but excessive indexing increases storage and slows insert and update operations.
+
+Example:
+
+CREATE INDEX idx_email
+ON users(email);
+
+
+-------------------------------------------------------------------------------
+5. What is a Sequential Scan?
+Interview Answer
+
+A sequential scan occurs when PostgreSQL reads every row in a table to satisfy a query. This happens when no suitable index exists or when PostgreSQL determines that scanning the entire table is cheaper than using an index.
+
+
+----------------------------------------------------------------------------------
+
+6. How do you identify slow queries?
+Interview Answer
+
+I use EXPLAIN and EXPLAIN ANALYZE to understand query execution plans. I look for sequential scans, high-cost operations, unnecessary joins, and missing indexes. Based on the analysis, I optimize queries, create indexes, or rewrite inefficient SQL statements.
+
+Example:
+
+EXPLAIN ANALYZE
+SELECT * FROM users
+WHERE email='abc@test.com';
+
+------------------------------------------------------------------------------------
+
+7. What is ACID?
+Interview Answer
+
+ACID stands for Atomicity, Consistency, Isolation, and Durability. Atomicity ensures all operations in a transaction succeed or fail together. Consistency ensures data integrity. Isolation prevents concurrent transactions from interfering with each other. Durability guarantees committed data survives system failures.
+
+
+----------------------------------------------------------------------------------------
+
+8. What are Transaction Isolation Levels?
+Interview Answer
+
+PostgreSQL supports Read Uncommitted, Read Committed, Repeatable Read, and Serializable isolation levels. Read Committed is the default isolation level. Higher isolation levels provide stronger consistency but may reduce concurrency.
+
+
+
+------------------------------------------------------------------------------------
+9. What is Deadlock?
+Interview Answer
+
+A deadlock occurs when two or more transactions wait indefinitely for each other to release locks. PostgreSQL automatically detects deadlocks and terminates one of the transactions so the other can continue.
+
+
+-----------------------------------------------------------------------------------
+
+10. What is Optimistic Locking?
+Interview Answer
+
+Optimistic locking assumes conflicts are rare. A version column is used to detect concurrent updates. Before updating a record, PostgreSQL checks whether the version has changed. If it has, the update fails and the transaction must be retried.
+
+Example JPA:
+
+@Version
+private Long version;
+
+----------------------------------------------------------------------------------
+
+11. What is Pessimistic Locking?
+Interview Answer
+
+Pessimistic locking locks rows before updates to prevent concurrent modifications. It is useful when conflicts are frequent but may reduce scalability because other transactions must wait.
+
+Example:
+
+SELECT *
+FROM product
+WHERE id=1
+FOR UPDATE;
+
+
+
+-----------------------------------------------------------------------------------
+12. How do you handle OutOfMemoryError when processing 1 lakh records?
+Interview Answer
+
+I avoid loading all records into memory at once. Instead, I use pagination, streaming, batch processing, cursors, or Spring Data JPA pagination. This reduces memory consumption and improves application performance.
+
+Example:
+
+PageRequest.of(0, 1000);
+
+
+---------------------------------------------------------------------------------
+
+13. What is Partitioning?
+Interview Answer
+
+Partitioning divides a large table into smaller physical tables while appearing as a single logical table. It improves query performance and maintenance for large datasets.
+
+Example:
+
+PARTITION BY RANGE(created_date);
+
+
+----------------------------------------------------------------------------------
+
+14. How do you optimize PostgreSQL performance?
+Interview Answer
+
+I optimize PostgreSQL by creating proper indexes, analyzing query execution plans, avoiding SELECT *, using pagination, partitioning large tables, optimizing joins, tuning connection pools, and performing regular VACUUM and ANALYZE operations.
+
+
+
+----------------------------------------------------------------------------------
+15. What is VACUUM?
+Interview Answer
+
+PostgreSQL uses MVCC, which leaves dead tuples after updates and deletes. VACUUM reclaims unused storage and keeps the database efficient. VACUUM ANALYZE also updates statistics used by the query planner.
+
+
+----------------------------------------------------------------------------------
+
+16. Difference Between WHERE and HAVING?
+Interview Answer
+
+WHERE filters rows before grouping, while HAVING filters grouped results after aggregation.
+
+Example:
+
+SELECT department,
+COUNT(*)
+FROM employee
+GROUP BY department
+HAVING COUNT(*) > 5;
+
+
+----------------------------------------------------------------------------------
+
+17. Explain PostgreSQL Connection Pooling.
+Interview Answer
+
+Creating database connections is expensive. Connection pooling reuses existing connections instead of creating new ones for every request. In Spring Boot, HikariCP is the default connection pool and helps improve performance and resource utilization.
+
+
+-------------------------------------------------------------------------------------
+
+18. Scenario Question: Stock Deduction by Multiple Users
+Interview Answer
+
+To avoid overselling inventory, I prefer an atomic update query:
+
+UPDATE product
+SET stock = stock - 1
+WHERE id = 1
+AND stock > 0;
+
+This prevents race conditions and performs better than long-lived pessimistic locks in high-concurrency systems.
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------
+
+1. Explain MVCC (Multi-Version Concurrency Control)
+Interview Ready Answer
+
+MVCC, or Multi-Version Concurrency Control, is PostgreSQL's mechanism for handling concurrent transactions efficiently without excessive locking. Instead of updating a row directly, PostgreSQL creates a new version of the row and keeps the old version until it is no longer needed. This allows readers to access a consistent snapshot of data while writers continue making changes. As a result, read operations generally do not block write operations, and write operations do not block reads. MVCC improves concurrency, reduces lock contention, and increases database performance in high-traffic applications. PostgreSQL uses VACUUM to clean up obsolete row versions and reclaim storage space.
+
+
+----------------------------------------------------------------------------------------------------------
+2. How do you optimize a slow query?
+Interview Ready Answer
+
+When I encounter a slow query, I first use EXPLAIN ANALYZE to examine the query execution plan and identify bottlenecks such as sequential scans, expensive joins, or inefficient sorting operations. I check whether appropriate indexes exist on frequently filtered, joined, or sorted columns. I avoid using SELECT * and retrieve only the required columns. For large datasets, I use pagination instead of loading all records at once. I also review table statistics, optimize joins, and ensure indexes are being utilized correctly. If the table is very large, I may consider partitioning. Finally, I monitor query performance after optimization to verify improvements.
+
+
+-------------------------------------------------------------------------------------------------------------
+3. Difference Between Optimistic and Pessimistic Locking
+Interview Ready Answer
+
+Optimistic and pessimistic locking are two approaches for handling concurrent data modifications. Optimistic locking assumes conflicts are rare and allows multiple users to read and update data simultaneously. It uses a version column to detect conflicts during updates. If another transaction has already modified the record, the update fails and must be retried. Pessimistic locking assumes conflicts are likely and locks the record before modification, preventing other transactions from updating it until the lock is released. Optimistic locking provides better scalability and performance in most web applications, while pessimistic locking is useful when data consistency is critical and update conflicts are frequent.
+
+
+-----------------------------------------------------------------------------------------------------------------
+4. How do you handle deadlocks?
+Interview Ready Answer
+
+A deadlock occurs when two or more transactions wait indefinitely for each other to release locks. PostgreSQL automatically detects deadlocks and terminates one of the transactions to resolve the situation. To minimize deadlocks, I ensure that transactions acquire locks in a consistent order across the application. I keep transactions short-lived and avoid holding locks longer than necessary. I also reduce unnecessary locking and use appropriate isolation levels. In Spring Boot applications, I handle deadlock exceptions by implementing retry mechanisms for failed transactions. Proper indexing and query optimization can also reduce lock contention and decrease the likelihood of deadlocks occurring.
+
+
+----------------------------------------------------------------------------------------------------------------------
+5. How do you process millions of records without memory issues?
+Interview Ready Answer
+
+Processing millions of records by loading everything into memory can lead to OutOfMemoryError and poor application performance. To avoid this, I use pagination, batch processing, streaming, or database cursors to process records in smaller chunks. In Spring Boot, I commonly use PageRequest or chunk-based processing to fetch a limited number of records at a time. For bulk updates or inserts, I use JDBC batch operations to reduce database round trips. If data processing is time-consuming, I may use asynchronous processing or Kafka-based event-driven architectures. This approach minimizes memory consumption, improves scalability, and allows the application to handle large datasets efficiently.
+
+
+
+==========================================SCENARIO Based Questions on PostgreSQL==================================================================================
+
+
+
+----------------------------------------------------------------------------------------------------------------
+1. Two users are trying to buy the last product at the same time. How will you prevent overselling?
+Answer
+
+If stock is 1 and two requests arrive simultaneously, both may read stock = 1 and both may place orders, causing overselling.
+
+Instead of:
+
+SELECT stock FROM product WHERE id=1;
+
+followed by
+
+UPDATE product SET stock = stock - 1;
+
+I would use an atomic update:
+
+UPDATE product
+SET stock = stock - 1
+WHERE id = 1
+AND stock > 0;
+
+Then check affected rows.
+
+1 row updated → order successful
+0 rows updated → out of stock
+
+This avoids race conditions and scales better than locking.
+
+
+--------------------------------------------------------------------------
+2. When would you use Pessimistic Locking?
+Answer
+
+Suppose a bank account transfer is happening.
+
+Two transactions should not modify the same account balance simultaneously.
+
+I would use:
+
+SELECT *
+FROM account
+WHERE id = 1
+FOR UPDATE;
+
+This locks the row until transaction commit.
+
+Other transactions must wait.
+
+Use pessimistic locking when:
+
+Data consistency is critical
+Conflicts are frequent
+Lost updates cannot be tolerated
+
+Examples:
+
+Banking
+Payment processing
+Wallet transactions
+
+
+------------------------------------------------------------------------------------
+3. When would you use Optimistic Locking?
+Answer
+
+For applications where conflicts are rare.
+
+Example:
+
+Employee profile update
+Customer information update
+
+Add a version column:
+
+version = 1
+
+Update:
+
+UPDATE employee
+SET name='John',
+version=version+1
+WHERE id=1
+AND version=1;
+
+If another transaction already updated the row, affected rows become 0.
+
+The user can retry.
+
+This avoids database locks and improves scalability.
+
+
+---------------------------------------------------------------------------------------------
+4. What is a Lost Update problem?
+Scenario
+
+Balance = 1000
+
+User A reads balance = 1000
+
+User B reads balance = 1000
+
+A adds 100:
+
+UPDATE account SET balance=1100;
+
+B adds 200:
+
+UPDATE account SET balance=1200;
+
+Final balance becomes 1200 instead of 1300.
+
+Solution
+
+Use:
+
+Optimistic Locking
+Pessimistic Locking
+Atomic SQL update
+
+
+--------------------------------------------------------------------------------------------------
+5. What is a Deadlock?
+Scenario
+
+Transaction A:
+
+Lock Account 1
+Lock Account 2
+
+Transaction B:
+
+Lock Account 2
+Lock Account 1
+
+A waits for B.
+
+B waits for A.
+
+Neither can proceed.
+
+This is a deadlock.
+
+PostgreSQL automatically detects deadlocks and kills one transaction.
+
+
+
+----------------------------------------------------------------------------------------------------
+6. How do you avoid Deadlocks?
+Answer
+
+Follow a consistent locking order.
+
+Example:
+
+Always lock smaller ID first.
+
+SELECT * FROM account
+WHERE id IN (1,2)
+ORDER BY id
+FOR UPDATE;
+
+This prevents circular waiting.
+
+Also:
+
+Keep transactions short
+Commit quickly
+Avoid unnecessary locks
+
+
+----------------------------------------------------------------------------------------------------
+7. A transaction is holding a lock for 5 minutes. What problem can occur?
+Answer
+
+Other transactions trying to update the same row will wait.
+
+This can cause:
+
+Slow response times
+Lock contention
+Reduced throughput
+Application timeout
+
+Therefore transactions should be short-lived.
+
+
+---------------------------------------------------------------------------------------------------
+8. What happens when two transactions update the same row?
+Answer
+
+PostgreSQL uses row-level locking.
+
+First transaction acquires the lock.
+
+Second transaction waits until:
+
+COMMIT
+
+or
+
+ROLLBACK
+
+of the first transaction.
+
+This ensures consistency.
+
+-------------------------------------------------------------------------------------------
+9. How would you implement seat booking for a movie ticket application?
+Answer
+
+Multiple users may try to book the same seat.
+
+Use:
+
+SELECT *
+FROM seats
+WHERE seat_no='A1'
+FOR UPDATE;
+
+Check availability.
+
+If available:
+
+UPDATE seats
+SET booked=true;
+
+Commit transaction.
+
+This prevents duplicate bookings.
+
+
+--------------------------------------------------------------------------------------
+10. How would you handle concurrent money transfers?
+Answer
+
+Example:
+
+Transfer ₹100 from A to B.
+
+BEGIN;
+
+SELECT *
+FROM account
+WHERE id IN (A,B)
+FOR UPDATE;
+
+UPDATE account
+SET balance=balance-100
+WHERE id=A;
+
+UPDATE account
+SET balance=balance+100
+WHERE id=B;
+
+COMMIT;
+
+Row locks ensure no concurrent modification during transfer.
+
+
+----------------------------------------------------------------------------------------
+11. What is Lock Contention?
+Answer
+
+Many transactions trying to acquire the same lock.
+
+Example:
+
+Thousands of users updating:
+
+product_stock
+
+for the same product.
+
+Symptoms:
+
+High wait time
+Slow queries
+Reduced throughput
+
+Solution:
+
+Atomic updates
+Partitioning
+Short transactions
+Reduce lock scope
+
+
+--------------------------------------------------------------------------------------------
+12. Why is Atomic Update preferred in high-traffic systems?
+Answer
+
+Instead of:
+
+SELECT stock
+
+then
+
+UPDATE stock
+
+Use:
+
+UPDATE product
+SET stock=stock-1
+WHERE id=1
+AND stock>0;
+
+Benefits:
+
+Single SQL statement
+No explicit locking
+Better concurrency
+Higher scalability
+
+This is commonly used in e-commerce applications like Amazon, Flipkart, and ticket-booking systems.
+
+
+-------------------------------------------------------------------------------------------------------------
+13. What is the difference between Row Lock and Table Lock?
+Row Lock	Table Lock
+Locks specific rows	Locks entire table
+Better concurrency	Poor concurrency
+Common in PostgreSQL	Rarely used
+Multiple users can update different rows	Users must wait
+
+--------------------------------------------------------------------------------------------------------------
+14. How would you answer "Have you handled concurrency issues in production?"
+Interview Answer
+
+"Yes. In inventory management scenarios, multiple users could update the same stock simultaneously. To avoid race conditions and overselling, we used atomic SQL updates like UPDATE product SET stock = stock - 1 WHERE id=? AND stock > 0. For critical financial operations, we used transactions with row-level locking (SELECT ... FOR UPDATE) to ensure data consistency. We also kept transactions short and followed a consistent lock order to avoid deadlocks."
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+=================================HEAP MEMORY==================================================================================================
+
+
+How to Check Heap Memory Programmatically?
+
+Java provides the Runtime class.
+
+Runtime runtime = Runtime.getRuntime();
+
+long totalMemory = runtime.totalMemory();
+long freeMemory = runtime.freeMemory();
+long usedMemory = totalMemory - freeMemory;
+
+System.out.println("Used Memory: " + usedMemory);
+
+--------------------------------------------------SAME ABOVE--------------------------
+public class HeapMemoryDemo {
+
+    public static void main(String[] args) {
+
+        Runtime runtime = Runtime.getRuntime();
+
+        long total = runtime.totalMemory();
+        long free = runtime.freeMemory();
+        long used = total - free;
+
+        System.out.println("Total Heap: " + total);
+        System.out.println("Free Heap: " + free);
+        System.out.println("Used Heap: " + used);
+    }
+}

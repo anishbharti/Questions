@@ -1,0 +1,270 @@
+=====================================================================================Jenkins Basics======================================
+1. What is Jenkins?
+
+Answer:
+Jenkins is an open-source automation server used to implement CI/CD pipelines. It automates code build, testing, and deployment processes.
+
+--------------------------------------------------
+2. What is CI/CD?
+
+Answer:
+
+Continuous Integration (CI): Automatically build and test code whenever developers commit changes.
+Continuous Deployment (CD): Automatically deploy validated code to environments like Dev, QA, UAT, or Production.
+-----------------------------------------------------
+3. What are the advantages of Jenkins?
+
+Answer:
+
+Automates build and deployment
+Large plugin ecosystem
+Supports Pipeline as Code
+Integrates with Git, Maven, Docker, Kubernetes, AWS, etc.
+
+-------------------------------------------------------
+4. How did you use Jenkins in your project?
+
+Answer:
+In our microservices project, Jenkins automatically pulled code from GitHub, built the application using Maven, created Docker images, pushed images to a repository, and deployed containers on target servers. Poll SCM was used to detect code changes and trigger CI/CD pipelines.
+
+======================Pipeline Questions=======================================================================================================================
+------------------------------------------------------
+5. What are the types of Jenkins Pipelines?
+
+Answer:
+
+Declarative Pipeline
+Scripted Pipeline (Groovy)
+
+Declarative is preferred because it is easier to maintain and read.
+
+------------------------------------------------------
+6. What is a Jenkinsfile?
+
+Answer:
+A Jenkinsfile is a text file stored in Git that contains the pipeline definition written in Groovy syntax.
+
+-------------------------------------------------------
+7. What is Pipeline Script from SCM?
+
+Answer:
+Pipeline Script from SCM allows Jenkins to fetch the Jenkinsfile directly from GitHub/GitLab and execute the pipeline.
+
+-------------------------------------------------------
+8. Difference between Declarative and Scripted Pipeline?
+Declarative	Scripted
+Easy syntax	Flexible but complex
+Structured	Full Groovy scripting
+Easier maintenance	More coding effort
+Build Trigger Questions
+
+------------------------------------------------------
+9. What is Build Periodically?
+
+Answer:
+Build Periodically triggers a Jenkins job automatically at scheduled intervals using cron expressions.
+
+Example:
+
+H/5 * * * *
+
+Runs every 5 minutes.
+
+--------------------------------------------------------
+
+10. What is Poll SCM?
+
+Answer:
+Poll SCM periodically checks the Git repository and triggers a build only when code changes are detected.
+
+----------------------------------------------------------------
+
+11. Difference between Build Periodically and Poll SCM?
+
+Answer:
+
+Build Periodically → Runs regardless of code changes.
+Poll SCM → Runs only if new commits are available.
+Git Integration
+
+-------------------------------------------------------------------
+12. How does Jenkins connect to GitHub?
+
+Answer:
+Using Git Plugin and repository URL configured in the pipeline.
+
+Example:
+
+git branch: 'main',
+url: 'https://github.com/project.git'
+-------------------------------------------------------------------
+13. What happens when a developer commits code?
+
+Answer:
+Poll SCM detects the new commit, Jenkins pulls the latest code, executes build stages, and deploys the updated application.
+
+Maven Questions
+
+-------------------------------------------------------------------
+14. Why configure Maven under Global Tools?
+
+Answer:
+To allow Jenkins to automatically use the configured Maven version across all pipelines.
+
+--------------------------------------------------------------------
+15. Why use the tools block?
+
+Answer:
+The tools block automatically configures JDK and Maven before pipeline execution.
+
+Example:
+
+tools {
+    maven 'maven-3.9.9'
+}
+
+--------------------------------------------------------------------
+16. What happens if tools block is not configured?
+
+Answer:
+Jenkins may fail with errors like:
+
+mvn: command not found
+java: command not found
+
+if the tools are not manually installed on the agent.
+
+Docker + Jenkins Questions
+
+--------------------------------------------------------------------
+17. How did you deploy applications using Jenkins?
+
+Answer:
+After Maven build, Jenkins created a Docker image and deployed it using Docker commands executed through the pipeline.
+
+-----------------------------------------------------------------------
+
+18. Why do we stop and remove containers before deployment?
+
+Answer:
+To avoid container name conflicts and ensure the latest application version is deployed.
+
+Example:
+
+docker stop psait
+docker rm psait
+docker run -d -p 9090:8080 --name psait psait/test1
+
+----------------------------------------------------------------------------
+19. Explain Docker port mapping.
+
+Answer:
+
+docker run -d -p 9090:8080
+9090 = Host Port
+8080 = Container Port
+
+Users access the application using port 9090.
+-----------------------------------------------------------------------------
+
+20. What is the relation between application.properties and Docker ports?
+
+Answer:
+The container port must match the Spring Boot server.port value configured in application.properties.
+
+AWS + Jenkins Questions
+
+------------------------------------------------------------------------------
+21. How did you install Jenkins on AWS?
+
+Answer:
+Created an Ubuntu EC2 instance, installed Java 17, installed Jenkins, opened port 8080 in Security Group, started Jenkins service, and accessed Jenkins via EC2 Public IP.
+
+--------------------------------------------------------------------------------
+22. Why open port 8080?
+
+Answer:
+Jenkins UI runs on port 8080, so inbound traffic must be allowed through the Security Group.
+
+--------------------------------------------------------------------------------
+23. Can inbound rule ports be different from application ports?
+
+Answer:
+Yes. AWS Security Group should allow the host port exposed by Docker.
+
+Example:
+
+Docker: -p 9090:8080
+Security Group: 9090
+CI/CD Scenario Questions
+
+-----------------------------------------------------------------------------------
+24. Explain your complete CI/CD pipeline.
+
+Answer:
+
+Developer commits code to GitHub.
+Jenkins Poll SCM detects changes.
+Jenkins clones source code.
+Maven builds the project.
+Unit tests execute.
+Docker image is created.
+Existing container is stopped and removed.
+New container is deployed.
+Application becomes available on the target URL.
+
+-----------------------------------------------------------------------------------
+25. What are Upstream and Downstream Jobs?
+
+Answer:
+
+Upstream Job → Executes first.
+Downstream Job → Triggered after successful completion of upstream job.
+
+Example:
+
+build 'test-pipeline-CD'
+
+CI pipeline triggers CD pipeline.
+
+Scenario-Based Questions
+
+---------------------------------------------------------------------------------------
+26. Jenkins build is failing. How do you troubleshoot?
+
+Answer:
+
+Check Console Output
+Verify Git access
+Verify Maven build logs
+Check Docker logs
+Verify Jenkins service status
+Check disk space and permissions
+
+-------------------------------------------------------------------------------------------
+27. How do you restart Jenkins?
+sudo systemctl restart jenkins
+
+--------------------------------------------------------------------------------------------
+28. How do you check Jenkins logs?
+sudo journalctl -u jenkins -f
+
+--------------------------------------------------------------------------------------------
+29. What plugins have you used?
+
+Answer:
+
+Git Plugin
+Pipeline Plugin
+Maven Integration Plugin
+Docker Plugin
+Credentials Plugin
+SSH Agent Plugin
+
+------------------------------------------------------------------------------------------------
+30. Difference between Freestyle Job and Pipeline?
+
+Answer:
+
+Freestyle Job → GUI-based configuration.
+Pipeline → Code-based CI/CD process stored in Jenkinsfile and version controlled.

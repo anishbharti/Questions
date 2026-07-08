@@ -1,0 +1,69 @@
+“Hi, my name is Anish Bharti. I am a Java Backend Developer with around 3 years and 4 months of professional experience, primarily working with Java, Spring Boot, and Microservices architecture. Over the past few years, I have been deeply involved in designing, developing, and maintaining scalable backend systems, especially in domains like insurance and enterprise applications.”
+
+I started my career focusing on backend fundamentals like REST API development, database design, and debugging. Over time, I transitioned into working on microservices-based architectures, where I gained hands-on experience in breaking monolithic systems into loosely coupled, independently deployable services.
+
+Currently, I am working at Wizergos Software Solutions in Bangalore, where I have been responsible for designing and developing 5+ RESTful APIs using Spring Boot, handling real-world business use cases such as user management, subscription systems, and invoice processing. These APIs are part of a microservices ecosystem where each service has a clearly defined responsibility and communicates via REST.
+
+One of my key contributions has been in database optimization. I have written and optimized over 50 SQL queries in PostgreSQL, reducing execution time by around 40%, which significantly improved reporting performance and reduced system latency. I also designed multiple database schemas ensuring normalization and performance efficiency.
+
+From a security perspective, I implemented JWT-based authentication and role-based authorization mechanisms. This helped in securing APIs and ensuring proper access control across different user roles such as admin, agent, and end-user, especially in projects like Bajaj Allianz Insurance.
+
+I have also worked on performance optimization techniques, such as implementing Redis caching to store frequently accessed data. This reduced API response time by around 40%, which was critical for handling concurrent user requests efficiently.
+
+In terms of DevOps and deployment, I have containerized microservices using Docker and set up CI/CD pipelines using GitHub Actions. This reduced deployment time significantly—from manual deployments to automated pipelines completing in under 10 minutes. It also improved release reliability and reduced human errors.
+
+I have strong experience in production support and troubleshooting, where I actively participated in resolving production incidents. I was able to reduce downtime to around 2 hours per month while maintaining 99% uptime. I also proactively resolved around 65% of QA issues before release, improving overall product stability.
+
+Talking about my projects:
+
+In the General Insurance Corporation (GIC) project, I worked on building APIs for user management, subscriptions, and invoice systems. These services handled around 1000+ concurrent requests daily. I also integrated Redis caching and automated deployments.
+
+In the Bajaj Allianz project, I developed APIs for ticket lifecycle management, including advanced search and pagination features. I ensured proper role-based access and improved ticket retrieval performance from 5 seconds to 2 seconds.
+
+From an architectural standpoint, I follow clean code principles, layered architecture, and proper API contracts. I ensure that services are loosely coupled and scalable. I am also comfortable working in Agile environments and actively participate in sprint planning, code reviews, and design discussions.
+
+Although I have not yet implemented Kafka in production, I have a strong conceptual understanding of event-driven architecture, including producers, consumers, topics, and asynchronous communication. I am currently learning Kafka practically to integrate it into microservices for real-time data processing.
+
+Overall, I consider myself strong in backend development, debugging, and system optimization. I enjoy solving performance issues, designing scalable APIs, and working on distributed systems.
+
+
+=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+Good morning, and thank you for giving me this opportunity to introduce myself.
+
+My name is Anish Bharti, and I am a Java Backend Developer with hands-on experience in Java, Spring Boot, Microservices, REST APIs, and SQL databases. I have been working on developing scalable backend applications using modern Java technologies and have gained practical exposure to designing, building, testing, and deploying enterprise-level applications.
+
+My core technical expertise includes Java 8, Spring Boot, Spring Data JPA, Hibernate, Microservices Architecture, RESTful Web Services, MySQL, Kafka, Git, Maven, and Docker. I am also familiar with cloud technologies and have worked with AWS services such as S3 for file storage and management. Throughout my development journey, I have focused on writing clean, maintainable, and efficient code while following industry-standard software development practices.
+
+One of the major projects I worked on is an E-Commerce Application developed using Microservices Architecture. This project consists of multiple independent services such as User Service, Product Service, Cart Service, Order Service, Payment Service, and Notification Service. Each service has its own responsibility and communicates with other services through REST APIs and Feign Clients. This architecture helped us achieve loose coupling, better scalability, and easier maintenance.
+
+In the User Service, I implemented user registration, authentication, and authorization functionalities using Spring Security and JWT-based authentication. Security was one of the critical requirements of the project because only authenticated users should be able to perform operations such as placing orders, managing carts, and viewing purchase history. JWT tokens helped us build a stateless authentication mechanism suitable for microservices environments.
+
+For the Product Service, I developed APIs for product management, inventory tracking, and category management. The service handled product-related operations and interacted with the database using Spring Data JPA and Hibernate. I also implemented pagination and sorting features to improve API performance when dealing with large product datasets.
+
+The Cart Service was responsible for managing user shopping carts. Customers could add products, update quantities, and remove items before proceeding to checkout. During development, one of the challenges I faced was handling communication between multiple services while maintaining data consistency. I resolved this by clearly defining service boundaries and using Feign Clients for inter-service communication.
+
+The Order Service handled order creation and processing workflows. Once a customer confirmed a purchase, the service validated product availability, calculated order amounts, and initiated the payment process. I designed the order flow carefully to ensure smooth coordination between order creation and payment confirmation.
+
+For payment processing, I integrated Stripe Payment Gateway. The Payment Service created payment requests and securely processed customer transactions through Stripe APIs. After receiving payment confirmation, the service updated payment status and informed the Order Service to change the order status accordingly. This implementation helped me understand real-world payment workflows, transaction management, and external API integrations.
+
+Another important component of the application was the Notification Service, which used Apache Kafka for asynchronous communication. Whenever important events such as order creation, payment completion, or user registration occurred, Kafka producers published messages to topics, and consumers processed those messages independently. This event-driven approach improved system reliability and reduced tight coupling between services.
+
+During this project, I also worked extensively with Spring Data JPA and Hibernate for database operations. I designed entity relationships, optimized SQL queries, implemented indexing strategies, and handled transaction management effectively. I gained experience in writing JPQL queries, native SQL queries, and implementing pagination and sorting for efficient data retrieval.
+
+One challenge I encountered was JSON serialization issues caused by bidirectional entity relationships. These issues sometimes resulted in infinite recursion during API responses. I resolved them using annotations such as @JsonManagedReference and @JsonBackReference, ensuring proper serialization and cleaner API responses.
+
+I have also used Java 8 features extensively throughout my projects. Lambda Expressions, Stream API, Functional Interfaces, Optional, and the Date-Time API helped me write cleaner and more efficient code. For example, I frequently used Streams for filtering, sorting, grouping, and transforming collections, which significantly reduced boilerplate code compared to traditional approaches.
+
+In addition to development, I regularly use Git and GitHub for version control. I am comfortable with branching strategies, pull requests, code reviews, merge conflict resolution, and collaborative development workflows. These practices have helped maintain code quality and streamline team collaboration.
+
+From a problem-solving perspective, I enjoy debugging production issues, analyzing application logs, and identifying root causes of failures. Whenever I encounter a challenge, I focus on understanding the problem thoroughly before implementing a solution. This approach has helped me develop strong analytical and troubleshooting skills.
+
+As a professional, I consider myself a quick learner, team player, and someone who enjoys continuous learning. Technology evolves rapidly, and I actively invest time in improving my skills by exploring new frameworks, design patterns, and industry best practices. I believe adaptability and a growth mindset are essential qualities for software engineers.
+
+My short-term goal is to further strengthen my expertise in backend development, cloud technologies, distributed systems, and microservices architecture. I want to work on challenging projects where I can contribute effectively while continuing to learn from experienced professionals. My long-term goal is to become a highly skilled software architect capable of designing scalable and reliable enterprise applications.
+
+Overall, my combination of Java development skills, Spring Boot expertise, microservices experience, database knowledge, problem-solving abilities, and passion for learning makes me confident in my ability to contribute positively to any development team. I am excited about opportunities that allow me to solve real-world business problems through technology and continue growing as a software professional.
+
+Thank you for your time and consideration. I would be happy to discuss my experience, projects, and technical skills in more detail.
