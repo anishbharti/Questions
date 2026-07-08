@@ -1,0 +1,164 @@
+===========================================CodersBrain company=========================================================
+
+-------------------------------------------------------------------------------
+1. What is @Transactional?
+
+Interview Ready Answer:
+
+@Transactional is a Spring annotation used to manage database transactions declaratively. When a method annotated with @Transactional is invoked, Spring creates a proxy that starts a transaction before method execution and either commits or rolls back the transaction based on the outcome. It ensures ACID properties such as Atomicity, Consistency, Isolation, and Durability. By default, Spring rolls back transactions only for RuntimeException and Error. The annotation is commonly used in the service layer where multiple database operations must succeed or fail as a single unit. It also supports advanced features such as propagation and isolation levels, allowing fine-grained control over transaction behavior in enterprise applications.
+
+
+
+
+Default Rollback Behavior
+========================
+
+Many developers answer this incorrectly.
+
+By default Spring rolls back only for:
+
+RuntimeException
+Error
+
+Example:
+
+throw new RuntimeException();
+
+Rollback occurs.
+
+But:
+
+throw new Exception();
+
+No rollback by default.
+
+To rollback:
+
+@Transactional(
+    rollbackFor = Exception.class
+)
+
+Very common interview question.
+
+
+---------------------------------------------------------------------------------
+2. What is a Controller?
+
+Interview Ready Answer:
+
+A Controller is a component in the Spring MVC architecture responsible for handling incoming HTTP requests and returning appropriate responses. It acts as an intermediary between the client and the business logic layer. Controllers are typically annotated with @Controller or @RestController. When a user sends a request, the controller receives it, processes the request parameters, invokes the service layer to execute business logic, and returns data or views to the client. In REST APIs, @RestController is commonly used to return JSON responses directly. Controllers help maintain separation of concerns by keeping request-handling logic separate from business and database logic.
+
+
+---------------------------------------------------------------------------------
+3. What is @Bean Annotation?
+
+Interview Ready Answer:
+
+@Bean is a Spring annotation used to declare and configure a bean manually inside a configuration class. It tells the Spring IoC container to create, manage, and maintain the lifecycle of the returned object. It is usually used inside classes annotated with @Configuration. Unlike @Component, which relies on component scanning, @Bean provides explicit control over object creation. It is useful when configuring third-party classes where source code cannot be modified. Spring stores the bean in its application context and injects it wherever required using Dependency Injection. It helps achieve loose coupling and centralized object management.
+
+
+----------------------------------------------------------------------------------
+4. Find Second Highest Salary Using Stream API
+
+Interview Ready Answer:
+
+The Java Stream API provides a functional programming approach to process collections. To find the second highest salary, we can sort salaries in descending order, remove duplicates, skip the first highest salary, and fetch the next value.
+
+List<Integer> salaries = Arrays.asList(50000, 80000, 60000, 80000, 70000);
+
+Integer secondHighest = salaries.stream()
+        .distinct()
+        .sorted(Comparator.reverseOrder())
+        .skip(1)
+        .findFirst()
+        .orElse(null);
+
+System.out.println(secondHighest);
+
+In this approach, distinct() removes duplicates, sorted() sorts salaries in descending order, skip(1) ignores the highest salary, and findFirst() returns the second highest salary. Stream API improves code readability and reduces boilerplate code compared to traditional loops.
+
+
+-----------------------------------------------------------------------------------
+5. What is Dependency Injection?
+
+Interview Ready Answer:
+
+Dependency Injection (DI) is a design pattern used to achieve loose coupling between objects. Instead of creating dependent objects inside a class, dependencies are provided by an external framework such as Spring. The Spring IoC container manages object creation and injects dependencies whenever required. Dependency Injection can be performed using Constructor Injection, Setter Injection, or Field Injection. Constructor Injection is generally recommended because it ensures mandatory dependencies are available during object creation. DI improves code maintainability, testability, and flexibility. It also makes unit testing easier because mock objects can be injected instead of real implementations.
+
+
+------------------------------------------------------------------------------------
+6. Difference Between Checked and Unchecked Exceptions
+
+Interview Ready Answer:
+
+Exceptions in Java are categorized into Checked and Unchecked Exceptions.
+
+Checked Exceptions are checked at compile time. The compiler forces the developer to handle them using try-catch or declare them using the throws keyword. Examples include IOException, SQLException, and FileNotFoundException.
+
+Unchecked Exceptions occur at runtime and are not checked by the compiler. They usually indicate programming errors such as invalid logic or improper data handling. Examples include NullPointerException, ArrayIndexOutOfBoundsException, and ArithmeticException.
+
+In short, checked exceptions represent recoverable conditions, while unchecked exceptions represent programming mistakes that should be fixed in the code.
+
+
+--------------------------------------------------------------------------------------
+7. Difference Between String, StringBuffer, and StringBuilder
+
+Interview Ready Answer:
+
+String, StringBuffer, and StringBuilder are used for handling text in Java but differ in mutability and thread safety.
+
+String is immutable, meaning once created its value cannot be changed. Any modification creates a new object.
+StringBuffer is mutable and thread-safe because its methods are synchronized. It is suitable for multi-threaded environments.
+StringBuilder is mutable but not synchronized, making it faster than StringBuffer. It is recommended for single-threaded applications.
+
+If frequent string modifications are required, StringBuilder is preferred due to better performance. String should be used when immutability is needed, and StringBuffer when multiple threads access the same object.
+
+
+----------------------------------------------------------------------------------------
+8. Important Collection Framework Questions
+
+Interview Ready Answer:
+
+The Java Collection Framework provides data structures and algorithms for storing and manipulating data efficiently.
+
+List allows duplicate elements and maintains insertion order. Examples: ArrayList, LinkedList.
+Set does not allow duplicate elements. Examples: HashSet, LinkedHashSet, TreeSet.
+Map stores key-value pairs. Examples: HashMap, LinkedHashMap, TreeMap.
+ArrayList provides fast random access but slower insertions/deletions in the middle.
+LinkedList provides efficient insertions and deletions but slower random access.
+HashMap provides O(1) average lookup time using hashing.
+TreeMap maintains sorted order with O(log n) operations.
+
+The Collection Framework improves code reusability and performance through standardized interfaces and implementations.
+
+
+------------------------------------------------------------------------------------------
+9. What are JUnit and Mockito?
+
+Interview Ready Answer:
+
+JUnit is a popular Java testing framework used for writing and executing unit test cases. It provides annotations such as @Test, @BeforeEach, and @AfterEach to organize tests. JUnit helps verify that individual units of code work correctly.
+
+Mockito is a mocking framework used along with JUnit. It allows developers to create mock objects for dependencies instead of using real implementations. This helps isolate the class under test. Common Mockito annotations include @Mock, @InjectMocks, and @Spy.
+
+Together, JUnit and Mockito enable effective unit testing by validating business logic independently from databases, APIs, or external services, resulting in faster and more reliable tests.
+
+
+-----------------------------------------------------------------------------------------
+10. How Do You Optimize Database Performance?
+
+Interview Ready Answer:
+
+Database performance optimization focuses on improving query execution speed and reducing resource consumption. Some common techniques include:
+
+Creating appropriate indexes on frequently searched columns.
+Avoiding SELECT * and retrieving only required columns.
+Writing optimized SQL queries and analyzing execution plans.
+Using pagination for large datasets.
+Normalizing data to reduce redundancy and denormalizing where performance benefits exist.
+Implementing caching using tools such as Redis.
+Using connection pooling to reduce database connection overhead.
+Partitioning large tables when necessary.
+Regularly updating database statistics and performing maintenance activities.
+
+These techniques reduce query execution time, improve scalability, and enhance overall application performance.
